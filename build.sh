@@ -14,7 +14,7 @@ rm -rf build
 mkdir -p build
 pushd build
 
-cmake -DCMAKE_BUILD_TYPE=relwithdebinfo ..
+cmake -DCMAKE_BUILD_TYPE=relwithdebinfo -DENABLE_DATE_TESTING=ON ..
 cmake --build . --config relwithdebinfo
 
 popd
