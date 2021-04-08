@@ -19,6 +19,11 @@ cmake_minimum_required( VERSION 3.7 )
 
 project( date VERSION 3.0.0 )
 
+LIST(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake)
+INCLUDE(cmake/ModuleImport.cmake)
+INCLUDE(cmake/ModuleCompileOptions.cmake)
+ModuleSetCompileOptions()
+
 include( GNUInstallDirs )
 
 get_directory_property( has_parent PARENT_DIRECTORY )
@@ -26,7 +31,7 @@ get_directory_property( has_parent PARENT_DIRECTORY )
 # Override by setting on CMake command line.
 set( CMAKE_CXX_STANDARD 17 CACHE STRING "The C++ standard whose features are requested." )
 
-option( USE_SYSTEM_TZ_DB "Use the operating system's timezone database" OFF )
+option( USE_SYSTEM_TZ_DB "Use the operating system's timezone database" ON )
 option( MANUAL_TZ_DB "User will set TZ DB manually by invoking set_install in their code" OFF )
 option( USE_TZ_DB_IN_DOT "Save the timezone database in the current folder" OFF )
 option( BUILD_SHARED_LIBS  "Build a shared version of library" OFF )
