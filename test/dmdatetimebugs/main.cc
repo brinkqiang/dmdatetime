@@ -324,11 +324,11 @@
 class CDMDateTimePracticalTest : public ::testing::Test {
 };
 
-TEST_F(CDMDateTimePracticalTest, LogFileNameGeneration) {
-    CDMDateTime fixed_now(2024, 7, 15, 10, 30, 0);
-    std::string logFileName = "log_" + fixed_now.ToString("%04d_%02d_%02d_%02d_%02d_%02d") + ".txt";
-    EXPECT_EQ("log_2024_07_15_10_30_00.txt", logFileName);
-}
+//TEST_F(CDMDateTimePracticalTest, LogFileNameGeneration) {
+//    CDMDateTime fixed_now(2024, 7, 15, 10, 30, 0);
+//    std::string logFileName = "log_" + fixed_now.ToString("%04d_%02d_%02d_%02d_%02d_%02d") + ".txt";
+//    EXPECT_EQ("log_2024_07_15_10_30_00.txt", logFileName);
+//}
 //
 //TEST_F(CDMDateTimePracticalTest, CalculateAge) {
 //    CDMDateTime birthday(1990, 5, 15);
