@@ -1,30 +1,67 @@
-# dmdatetime
+# dmdatetime 🕒
 
-Copyright (c) 2013-2018 brinkqiang (brink.qiang@gmail.com)
+A lightweight, cross-platform C++ datetime library for efficient date and time manipulation.
 
-[![dmdatetime](https://img.shields.io/badge/brinkqiang-dmdatetime-blue.svg?style=flat-square)](https://github.com/brinkqiang/dmdatetime)
-[![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/brinkqiang/dmdatetime/blob/master/LICENSE)
-[![blog](https://img.shields.io/badge/Author-Blog-7AD6FD.svg)](https://brinkqiang.github.io/)
-[![Open Source Love](https://badges.frapsoft.com/os/v3/open-source.png)](https://github.com/brinkqiang)
-[![GitHub stars](https://img.shields.io/github/stars/brinkqiang/dmdatetime.svg?label=Stars)](https://github.com/brinkqiang/dmdatetime) 
-[![GitHub forks](https://img.shields.io/github/forks/brinkqiang/dmdatetime.svg?label=Fork)](https://github.com/brinkqiang/dmdatetime)
+## Features ✨
+- 🕰️ **Precision**: Supports milliseconds precision
+- 🌐 **Timezone Handling**: UTC and local time conversions
+- 📅 **Date Manipulation**: Add years, months, days, etc.
+- ⏱️ **Time Span Calculations**: `CDMTimeSpan` for duration operations
+- 📊 **Date Queries**: Day of week, day of year, leap year checks
+- 📈 **Range Operations**: Check if datetime falls within range
+- 🧪 **Boundary Values**: MinValue, MaxValue, Today helpers
+- 🔄 **Parsing & Formatting**: Multiple standard formats support
+- 🧩 **Cross-Platform**: Windows and Linux compatible
 
-## Build status
-| [Linux][lin-link] | [Mac][mac-link] | [Windows][win-link] |
-| :---------------: | :----------------: | :-----------------: |
-| ![lin-badge]      | ![mac-badge]       | ![win-badge]        |
+## Usage Examples 🚀
 
-[lin-badge]: https://github.com/brinkqiang/dmdatetime/workflows/linux/badge.svg "linux build status"
-[lin-link]:  https://github.com/brinkqiang/dmdatetime/actions/workflows/linux.yml "linux build status"
-[mac-badge]: https://github.com/brinkqiang/dmdatetime/workflows/mac/badge.svg "mac build status"
-[mac-link]:  https://github.com/brinkqiang/dmdatetime/actions/workflows/mac.yml "mac build status"
-[win-badge]: https://github.com/brinkqiang/dmdatetime/workflows/win/badge.svg "win build status"
-[win-link]:  https://github.com/brinkqiang/dmdatetime/actions/workflows/win.yml "win build status"
-
-## Intro
-dmdatetime
+### Create DateTime
 ```cpp
+CDMDateTime now = CDMDateTime::Now(); // Current time
+CDMDateTime custom(2023, 12, 31, 23, 59, 59, 999); // Specific datetime
 ```
-## Contacts
 
-## Thanks
+### Formatting
+```cpp
+std::string iso = now.ToString(); // "2023-12-31 23:59:59"
+std::string cnFormat = now.ToString(CDMDateTime::TO_STRING_STANDARD_CN);
+```
+
+### Date Manipulation
+```cpp
+CDMDateTime tomorrow = now.AddDays(1);
+CDMDateTime nextMonth = now.AddMonths(1);
+CDMDateTime startOfDay = now.GetStartOfDay();
+```
+
+### Time Span Calculations
+```cpp
+CDMTimeSpan duration = tomorrow.Subtract(now);
+long long hours = duration.GetTotalHours();
+```
+
+### Parsing
+```cpp
+CDMDateTime parsed = CDMDateTime::Parse("2023-12-31 23:59:59");
+```
+
+## Build Instructions 🔧
+```bash
+# Linux/macOS
+./build.sh
+
+# Windows
+build.bat
+```
+
+## Format Specifiers 🧾
+| Format | Description |
+|--------|-------------|
+| `FORMAT_STANDARD` | "2023-12-31 23:59:59" |
+| `FORMAT_STANDARD_MS` | "2023-12-31 23:59:59.999" |
+| `FORMAT_SHORT_DATE` | "2023-12-31" |
+| `FORMAT_STANDARD_CN` | "2023年12月31日 23时59分59秒" |
+| `FORMAT_STANDARD_MS_CN` | "2023年12月31日 23时59分59秒.999" |
+
+## License 📄
+MIT License - See [LICENSE](LICENSE) for details.
