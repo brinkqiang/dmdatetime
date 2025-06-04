@@ -419,48 +419,48 @@ TEST_F(CDMDateTimePracticalTest, 3000)
 
 
 
-    //int start_year = 2150;
-    //int end_year_search_limit = 3000;
+    int start_year = 2150;
+    int end_year_search_limit = 3000;
 
-    //for (int year_to_test = start_year; year_to_test <= end_year_search_limit; ++year_to_test) {
-    //    CDMDateTime dt_test_object;
-    //    bool construction_ok = true;
-    //    std::string error_message;
+    for (int year_to_test = start_year; year_to_test <= end_year_search_limit; ++year_to_test) {
+        CDMDateTime dt_test_object;
+        bool construction_ok = true;
+        std::string error_message;
 
-    //    try {
-    //        dt_test_object = CDMDateTime(year_to_test, 1, 1, 12, 0, 0);
+        try {
+            dt_test_object = CDMDateTime(year_to_test, 1, 1, 12, 0, 0);
 
-    //        int retrieved_year = dt_test_object.GetYear();
-    //        int retrieved_month = dt_test_object.GetMonth();
-    //        int retrieved_day = dt_test_object.GetDay();
+            int retrieved_year = dt_test_object.GetYear();
+            int retrieved_month = dt_test_object.GetMonth();
+            int retrieved_day = dt_test_object.GetDay();
 
-    //        if (retrieved_year != year_to_test) {
-    //            construction_ok = false;
-    //            error_message = "Component mismatch. Expected: " + std::to_string(year_to_test) + "-01-01, "
-    //                + "Got: " + std::to_string(retrieved_year) + "-"
-    //                + std::to_string(retrieved_month) + "-"
-    //                + std::to_string(retrieved_day);
-    //        }
-    //    }
-    //    catch (const std::runtime_error& e) {
-    //        construction_ok = false;
-    //        error_message = "std::runtime_error caught: " + std::string(e.what());
-    //    }
-    //    catch (const std::exception& e) {
-    //        construction_ok = false;
-    //        error_message = "std::exception caught: " + std::string(e.what());
-    //    }
-    //    catch (...) {
-    //        construction_ok = false;
-    //        error_message = "Unknown exception caught during CDMDateTime construction or validation.";
-    //    }
+            if (retrieved_year != year_to_test) {
+                construction_ok = false;
+                error_message = "Component mismatch. Expected: " + std::to_string(year_to_test) + "-01-01, "
+                    + "Got: " + std::to_string(retrieved_year) + "-"
+                    + std::to_string(retrieved_month) + "-"
+                    + std::to_string(retrieved_day);
+            }
+        }
+        catch (const std::runtime_error& e) {
+            construction_ok = false;
+            error_message = "std::runtime_error caught: " + std::string(e.what());
+        }
+        catch (const std::exception& e) {
+            construction_ok = false;
+            error_message = "std::exception caught: " + std::string(e.what());
+        }
+        catch (...) {
+            construction_ok = false;
+            error_message = "Unknown exception caught during CDMDateTime construction or validation.";
+        }
 
-    //    if (!construction_ok) {
-    //        std::cerr << "Error encountered when testing year: " << year_to_test << std::endl;
-    //        std::cerr << "Error details: " << error_message << std::endl;
-    //        break;
-    //    }
-    //}
+        if (!construction_ok) {
+            std::cerr << "Error encountered when testing year: " << year_to_test << std::endl;
+            std::cerr << "Error details: " << error_message << std::endl;
+            break;
+        }
+    }
 }
 
 TEST_F(CDMDateTimePracticalTest, 4000)
