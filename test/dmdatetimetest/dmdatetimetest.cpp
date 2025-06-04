@@ -42,7 +42,7 @@ TEST_F(CDMDateTimeUsageTest, CreationMethods) {
     CDMDateTime dt1_parse = CDMDateTime::Parse("2024-12-25 15:30:45");
     EXPECT_EQ(dt_ref, dt1_parse);
 
-    CDMDateTime dt2_parse_format = CDMDateTime::Parse("2024/12/25 15:30:45", "yyyy/MM/dd HH:mm:ss");
+    CDMDateTime dt2_parse_format = CDMDateTime::Parse("2024/12/25 15:30:45", "%d/%d/%d %d:%d:%d");
     EXPECT_EQ(dt_ref, dt2_parse_format);
 
     CDMDateTime dt3_components(2024, 12, 25, 15, 30, 45);
@@ -68,7 +68,7 @@ TEST_F(CDMDateTimeUsageTest, CreationMethods) {
 
 TEST_F(CDMDateTimeUsageTest, FormattingOutput) {
     EXPECT_EQ("2024-12-25 15:30:45", dt_ref.ToString());
-    EXPECT_EQ("2024年12月25日", dt_ref.ToString("yyyy年MM月dd日"));
+    EXPECT_EQ("2024-12-25", dt_ref.ToString("%Y-%m-%d"));
 
     // ISOString and UTCString depend on implementation specifics and local timezone
     // For ISOString, a common representation of local time.
@@ -325,26 +325,20 @@ TEST_F(CDMDateTimeUsageTest, FormatConstants) {
     // These tests assume what the constants expand to.
     // If the actual format strings for these constants are known, use them.
     // Default ToString() is already tested as "yyyy-MM-dd HH:mm:ss"
-    EXPECT_EQ(dt_ref.ToString(), dt_ref.ToString(CDMDateTime::FORMAT_STANDARD_NO_MS));
+    EXPECT_EQ(dt_ref.ToString(), dt_ref.ToString("%Y-%m-%d %H:%M:%S"));
 
     // Assuming FORMAT_SHORT_DATE is "yyyy-MM-dd"
-    EXPECT_EQ("2024-12-25", dt_ref.ToString(CDMDateTime::FORMAT_SHORT_DATE));
+    EXPECT_EQ("2024-12-25", dt_ref.ToString("%Y-%m-%d"));
 
     // Assuming FORMAT_LONG_DATE is "yyyy年MM月dd日" (or similar based on locale/lib)
     // This is a guess. If different, this will fail.
     // From example: dt1.ToString("yyyy年MM月dd日 HH:mm:ss")
     // Let's assume FORMAT_LONG_DATE doesn't include time.
-    std::string long_date_str = dt_ref.ToString(CDMDateTime::FORMAT_LONG_DATE_CN);
+    std::string long_date_str = dt_ref.ToString("%Y-%m-%d %H:%M:%S");
     EXPECT_NE(std::string::npos, long_date_str.find(std::to_string(dt_ref.GetYear())));
     EXPECT_NE(std::string::npos, long_date_str.find(std::to_string(dt_ref.GetMonth())));
     EXPECT_NE(std::string::npos, long_date_str.find(std::to_string(dt_ref.GetDay())));
 
-
-    // Assuming FORMAT_SHORT_TIME is "HH:mm"
-    EXPECT_EQ("15:30", dt_ref.ToString(CDMDateTime::FORMAT_SHORT_TIME));
-
-    // Assuming FORMAT_LONG_TIME is "HH:mm:ss"
-    EXPECT_EQ("15:30:45", dt_ref.ToString(CDMDateTime::FORMAT_LONG_TIME));
 }
 
 
@@ -353,8 +347,8 @@ class CDMDateTimePracticalTest : public ::testing::Test {
 
 TEST_F(CDMDateTimePracticalTest, LogFileNameGeneration) {
     CDMDateTime fixed_now(2024, 7, 15, 10, 30, 0);
-    std::string logFileName = "log_" + fixed_now.ToString("yyyyMMdd_HHmmss") + ".txt";
-    EXPECT_EQ("log_20240715_103000.txt", logFileName);
+    std::string logFileName = "log_" + fixed_now.ToString("%Y_%m_%d_%H_%M_%S") + ".txt";
+    EXPECT_EQ("log_2024_07_15_10_30_00.txt", logFileName);
 }
 
 TEST_F(CDMDateTimePracticalTest, CalculateAge) {

@@ -137,14 +137,11 @@ private:
 
 public:
     static const char* FORMAT_STANDARD;
-    static const char* FORMAT_STANDARD_NO_MS;
+    static const char* FORMAT_STANDARD_MS;
     static const char* FORMAT_SHORT_DATE;
-    static const char* FORMAT_LONG_DATE_CN;
-    static const char* FORMAT_SHORT_TIME;
-    static const char* FORMAT_LONG_TIME;
-    static const char* FORMAT_ISO_UTC;
-    static const char* FORMAT_FILENAME_SAFE; // yyyyMMdd_HHmmss
-
+    static const char* FORMAT_STANDARD_CN;
+    static const char* FORMAT_STANDARD_MS_CN;
+    static const char* FORMAT_SHORT_DATE_CN;
 
     CDMDateTime() : time_point_(std::chrono::system_clock::now()) {}
 
@@ -152,89 +149,41 @@ public:
         return CDMDateTime(std::chrono::system_clock::now());
     }
 
-    static CDMDateTime Parse(const std::string& dateTimeStr,const std::string& format_hint = "") {
+    static CDMDateTime Parse(const std::string& dateTimeStr, const std::string& sscanf_format = FORMAT_STANDARD) {
+        int year = 0, month = 0, day = 0;
+        int hour = 0, minute = 0, second = 0, millisecond = 0; // 初始化为0
+
+        // sscanf 会根据 sscanf_format 中的说明符数量来尝试填充变量。
+        // 如果格式字符串中的 %d 少于7个，则对应的尾随参数不会被 sscanf 修改，
+        // 它们将保留初始值0。
+        int fields_scanned = sscanf(dateTimeStr.c_str(), sscanf_format.c_str(),
+            &year, &month, &day,
+            &hour, &minute, &second, &millisecond);
+
+        if (fields_scanned == EOF || fields_scanned < 3) {
+            // EOF 表示输入错误或在任何转换发生前匹配失败。
+            // 少于3个字段表示连基本的年、月、日都没有成功解析。
+            char error_buf[256];
+            snprintf(error_buf, sizeof(error_buf),
+                "Failed to parse basic date components (Y,M,D) with sscanf. Format: '%s', Input: '%s'. Fields scanned: %d",
+                sscanf_format.c_str(), dateTimeStr.c_str(), fields_scanned);
+            throw std::runtime_error(error_buf);
+        }
+
+        // 使用解析出来的值（或默认值0）来构建 CDMDateTime 对象。
+        // init_from_components 接收的是绝对年份和1基准的月份。
+        // sscanf 读取的 year (例如 2023) 和 month (例如 12) 是直接的数值。
+        // day 默认为0，如果未被扫描，但fields_scanned >= 3 保证了 day 被扫描。
+        // 如果 day 被读为0，mktime 的行为可能未定义或依赖平台，通常应为有效日期。
+        // 如果 sscanf_format 类似 "%d-%d-%d"，day 至少会被赋一个值。
+        // 为安全起见，如果 day 最终为0（理论上 sscanf 至少会赋个值），应处理。
+        if (day == 0 && fields_scanned >= 3) day = 1; // 确保day至少为1，尽管sscanf应该已赋值
+
         CDMDateTime resultDt;
-        int year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0, millisecond = 0;
-        int fields_scanned = 0;
-        bool parsed_successfully = false;
-
-        // Attempt parsing with various common formats using sscanf
-        // Pattern 1: YYYY-MM-DD HH:MM:SS.ms
-        fields_scanned = sscanf(dateTimeStr.c_str(), "%d-%d-%d %d:%d:%d.%d",
-            &year, &month, &day, &hour, &minute, &second, &millisecond);
-        if (fields_scanned >= 6 || fields_scanned == 3) { // Date and time mandatory, ms optional
-            if (fields_scanned != 7) millisecond = 0;
-            parsed_successfully = true;
-        }
-
-        // Pattern 2: YYYY-MM-DD HH:MM:SS (no ms)
-        if (!parsed_successfully) {
-            fields_scanned = sscanf(dateTimeStr.c_str(), "%d-%d-%d %d:%d:%d",
-                &year, &month, &day, &hour, &minute, &second);
-            if (fields_scanned == 6) {
-                millisecond = 0;
-                parsed_successfully = true;
-            }
-        }
-
-        // Pattern 3: YYYY/MM/DD HH:MM:SS.ms
-        if (!parsed_successfully) {
-            fields_scanned = sscanf(dateTimeStr.c_str(), "%d/%d/%d %d:%d:%d.%d",
-                &year, &month, &day, &hour, &minute, &second, &millisecond);
-            if (fields_scanned >= 6) {
-                if (fields_scanned == 6) millisecond = 0;
-                parsed_successfully = true;
-            }
-        }
-
-        // Pattern 4: YYYY/MM/DD HH:MM:SS (no ms)
-        if (!parsed_successfully) {
-            fields_scanned = sscanf(dateTimeStr.c_str(), "%d/%d/%d %d:%d:%d",
-                &year, &month, &day, &hour, &minute, &second);
-            if (fields_scanned == 6) {
-                millisecond = 0;
-                parsed_successfully = true;
-            }
-        }
-
-        // Pattern 5: YYYYMMDD_HHMMSS (often used in filenames)
-        if (!parsed_successfully && (format_hint == FORMAT_FILENAME_SAFE || format_hint == "yyyyMMdd_HHmmss")) {
-            fields_scanned = sscanf(dateTimeStr.c_str(), "%4d%2d%2d_%2d%2d%2d",
-                &year, &month, &day, &hour, &minute, &second);
-            if (fields_scanned == 6) {
-                millisecond = 0;
-                parsed_successfully = true;
-            }
-        }
-
-
-        if (parsed_successfully) {
-            // Basic validation for component ranges (more thorough validation happens in mktime)
-            if (month < 1 || month > 12 || day < 1 || day > 31 || // Simplistic day check
-                hour < 0 || hour > 23 || minute < 0 || minute > 59 ||
-                second < 0 || second > 59 || // sscanf might read >59 for seconds like "60" which mktime handles
-                millisecond < 0 || millisecond > 999) {
-                // Optional: assert(false && "Parsed date/time components out of basic typical range");
-                return resultDt;
-            }
-            try {
-                // Use the public constructor which calls init_from_components
-                resultDt = CDMDateTime(year, month, day, hour, minute, second, millisecond);
-
-                return resultDt;
-            }
-            catch (const std::runtime_error&) {
-                // mktime failed during construction
-                // Optional: assert(false && "mktime failed for parsed components during CDMDateTime construction");
-                return resultDt;
-            }
-        }
-
-        // If format_hint was specific and we still failed, or all generic attempts failed.
-        // Optional: assert(false && "DateTime Parse failed for input string");
+        // 如果 sscanf_format 不包含毫秒的 %d, millisecond 变量将保持其初始值 0。
+        resultDt.init_from_components(year, month, day, hour, minute, second, millisecond);
         return resultDt;
     }
-
 
     CDMDateTime(int year, int month, int day, int hour = 0, int minute = 0, int second = 0, int millisecond = 0) {
         init_from_components(year, month, day, hour, minute, second, millisecond);
@@ -249,83 +198,33 @@ public:
         }
     }
 
-    std::string ToString(const std::string& formatStr = FORMAT_STANDARD_NO_MS) const {
-        char buffer[128]; // Buffer for formatted string
-        buffer[0] = '\0'; // Initialize to empty string
+    // ToString 方法将继续使用 strftime 兼容的格式
+    std::string ToString(const std::string& strftime_format = "%Y-%m-%d %H:%M:%S") const {
+        // ... (如之前展示的，内部使用 strftime，并可处理自定义 %f 或 "fff" 毫秒)
+        char buffer[128];
+        std::string final_format = strftime_format;
+        bool handle_ms_manually = false;
+        int ms_val = 0;
+
+        // 简单处理自定义的 %f 标记给 ToString
+        size_t f_pos = final_format.find("%f");
+        if (f_pos != std::string::npos) {
+            handle_ms_manually = true;
+            ms_val = GetMillisecond();
+            final_format.replace(f_pos, 2, ""); // 移除 %f，strftime 不认识
+        }
+
         std::tm t_local = to_tm_local();
-        size_t len = 0;
-        bool custom_handled = false;
+        size_t len = strftime(buffer, sizeof(buffer), final_format.c_str(), &t_local);
 
-        if (formatStr == FORMAT_STANDARD) {
-            len = strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", &t_local);
-            if (len > 0 && len < sizeof(buffer) - 4) { // Check space for ".fff"
-                snprintf(buffer + len, sizeof(buffer) - len, ".%03d", GetMillisecond());
-            }
-            custom_handled = true;
-        }
-        else if (formatStr == FORMAT_ISO_UTC) {
-            std::tm t_utc_val = to_tm_utc();
-            len = strftime(buffer, sizeof(buffer), "%Y-%m-%dT%H:%M:%S", &t_utc_val);
-            if (len > 0 && len < sizeof(buffer) - 5) { // Check space for ".fffZ"
-                snprintf(buffer + len, sizeof(buffer) - len, ".%03dZ", GetMillisecond());
-            }
-            custom_handled = true;
-        }
-        else if (formatStr == FORMAT_LONG_DATE_CN) {
-            snprintf(buffer, sizeof(buffer), "%04d年%02d月%02d日",
-                t_local.tm_year + 1900, t_local.tm_mon + 1, t_local.tm_mday);
-            custom_handled = true;
-        }
-        else if (formatStr == FORMAT_FILENAME_SAFE || formatStr == "yyyyMMdd_HHmmss") {
-            strftime(buffer, sizeof(buffer), "%Y%m%d_%H%M%S", &t_local);
-            custom_handled = true;
-        }
-        // Add more explicit format handling here if needed
-
-        if (!custom_handled) { // Fallback for other strftime-compatible or semi-custom formats
-            std::string tempFormatStr = formatStr;
-            // Map user-friendly tokens to strftime specifiers
-            replace_all(tempFormatStr, "yyyy", "%Y");
-            replace_all(tempFormatStr, "yy", "%y");
-            replace_all(tempFormatStr, "MM", "%m");
-            replace_all(tempFormatStr, "dd", "%d");
-            replace_all(tempFormatStr, "HH", "%H");
-            replace_all(tempFormatStr, "hh", "%I");
-            replace_all(tempFormatStr, "mm", "%M");
-            replace_all(tempFormatStr, "ss", "%S");
-            // 'fff' for milliseconds needs special handling after strftime
-
-            bool has_fff = (tempFormatStr.find("fff") != std::string::npos);
-            if (has_fff) {
-                replace_all(tempFormatStr, ".fff", ""); // Remove .fff for strftime pass
-                replace_all(tempFormatStr, "fff", "");  // Remove fff for strftime pass
-            }
-
-            len = strftime(buffer, sizeof(buffer), tempFormatStr.c_str(), &t_local);
-
-            if (len > 0 && has_fff) {
-                if (formatStr.find(".fff") != std::string::npos) { // Original format had ".fff"
-                    if (len < sizeof(buffer) - 4) {
-                        snprintf(buffer + len, sizeof(buffer) - len, ".%03d", GetMillisecond());
-                    }
-                }
-                else if (formatStr.find("fff") != std::string::npos) { // Original format had "fff"
-                    if (len < sizeof(buffer) - 3) {
-                        snprintf(buffer + len, sizeof(buffer) - len, "%03d", GetMillisecond());
-                    }
-                }
-            }
-        }
-
-        if (strlen(buffer) == 0 && sizeof(buffer) > 0) { // strftime/snprintf failed or wrote nothing
-            // Consider returning a specific error indicator or an empty string safely
+        if (handle_ms_manually && len > 0 && len < sizeof(buffer) - 4) { // 为 ".123" 留空间
+            snprintf(buffer + len, sizeof(buffer) - len, ".%03d", ms_val);
         }
         return std::string(buffer);
     }
 
-
     std::string ToISOString() const {
-        return ToString(FORMAT_ISO_UTC);
+        return ToString();
     }
 
     std::string ToUTCString() const { // Default "yyyy-MM-dd HH:mm:ss.fff UTC"
@@ -486,13 +385,11 @@ public:
     }
 };
 
-const char* CDMDateTime::FORMAT_STANDARD = "yyyy-MM-dd HH:mm:ss.fff";
-const char* CDMDateTime::FORMAT_STANDARD_NO_MS = "%Y-%m-%d %H:%M:%S";
-const char* CDMDateTime::FORMAT_SHORT_DATE = "%Y-%m-%d";
-const char* CDMDateTime::FORMAT_LONG_DATE_CN = "yyyy年MM月dd日";
-const char* CDMDateTime::FORMAT_SHORT_TIME = "%H:%M";
-const char* CDMDateTime::FORMAT_LONG_TIME = "%H:%M:%S";
-const char* CDMDateTime::FORMAT_ISO_UTC = "yyyy-MM-ddTHH:mm:ss.fffZ";
-const char* CDMDateTime::FORMAT_FILENAME_SAFE = "yyyyMMdd_HHmmss";
+const char* CDMDateTime::FORMAT_STANDARD = "%d-%d-%d %d:%d:%d";
+const char* CDMDateTime::FORMAT_STANDARD_MS = "%d-%d-%d %d:%d:%d.%d";
+const char* CDMDateTime::FORMAT_SHORT_DATE = "%d-%d-%d";
 
+const char* CDMDateTime::FORMAT_STANDARD_CN = "%d年%d月%d日 %d时%d分%d秒";
+const char* CDMDateTime::FORMAT_STANDARD_MS_CN = "%d年%d月%d日 %d时%d分%d秒.%d";
+const char* CDMDateTime::FORMAT_SHORT_DATE_CN = "%d年%d月%d日";
 #endif // DMDATETIME_H_
