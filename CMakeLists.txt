@@ -23,10 +23,6 @@ set(CMAKE_SHARED_LIBRARY_PREFIX "")
 
 ModuleImportAll("thirdparty")
 
-LibImport("libdmdatetime" "src/libdmdatetime")
-
 if(PROJECT_IS_TOP_LEVEL)
-    ExeImport("test" "libdmdatetime;dmtest")
+    ExeImport("test" "dmtest")
 endif()
-
-AddInstall("libdmdatetime" "${CMAKE_CURRENT_SOURCE_DIR}/include")
