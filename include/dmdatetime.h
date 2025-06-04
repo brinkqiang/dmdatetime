@@ -193,7 +193,7 @@ public:
 
 
     std::string ToString(const std::string& format_string = "%04d-%02d-%02d %02d:%02d:%02d") const {
-        char buffer[128];
+        char buffer[128] = {0};
         std::tm t_local = to_tm_local();
         snprintf(buffer, sizeof(buffer), format_string.c_str(),
             t_local.tm_year + 1900,
