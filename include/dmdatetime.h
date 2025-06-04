@@ -333,7 +333,7 @@ public:
     }
 
     static CDMDateTime MaxValue() {
-        return CDMDateTime(2250, 2, 1, 8, 0, 0);
+        return CDMDateTime(2300, 2, 1, 8, 0, 0);
     }
 
     bool IsBetween(const CDMDateTime& start, const CDMDateTime& end, bool inclusiveStart = true, bool inclusiveEnd = true) const {
