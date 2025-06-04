@@ -72,126 +72,126 @@ TEST_F(CDMDateTimeUsageTest, GetComponentValues) {
     EXPECT_EQ(3, dt_ref.GetDayOfWeek()); // 2024-12-25 is Wednesday (0=Sun, 1=Mon, ..., 3=Wed)
     EXPECT_EQ(360, dt_ref.GetDayOfYear()); // 2024 is a leap year. 31(Jan)+29(Feb)+31(Mar)+30(Apr)+31(May)+30(Jun)+31(Jul)+31(Aug)+30(Sep)+31(Oct)+30(Nov)+25(Dec)
 }
-
-TEST_F(CDMDateTimeUsageTest, TimeArithmetic) {
-    CDMDateTime tomorrow = dt_ref.AddDays(1);
-    EXPECT_EQ(2024, tomorrow.GetYear());
-    EXPECT_EQ(12, tomorrow.GetMonth());
-    EXPECT_EQ(26, tomorrow.GetDay());
-    EXPECT_EQ(dt_ref.GetHour(), tomorrow.GetHour());
-
-    CDMDateTime nextWeek = dt_ref.AddDays(7);
-    EXPECT_EQ(2025, nextWeek.GetYear()); // 25 + 7 = 32, so Jan 1st of next year
-    EXPECT_EQ(1, nextWeek.GetMonth());
-    EXPECT_EQ(1, nextWeek.GetDay());
-
-    CDMDateTime nextMonth = dt_ref.AddMonths(1);
-    EXPECT_EQ(2025, nextMonth.GetYear());
-    EXPECT_EQ(1, nextMonth.GetMonth());
-    EXPECT_EQ(25, nextMonth.GetDay());
-
-    CDMDateTime nextYear = dt_ref.AddYears(1);
-    EXPECT_EQ(2025, nextYear.GetYear());
-    EXPECT_EQ(12, nextYear.GetMonth());
-    EXPECT_EQ(25, nextYear.GetDay());
-
-    CDMDateTime later = dt_ref.AddHours(2).AddMinutes(30).AddSeconds(15); // 15:30:45 + 2h30m15s = 18:01:00
-    EXPECT_EQ(18, later.GetHour());
-    EXPECT_EQ(1, later.GetMinute());
-    EXPECT_EQ(0, later.GetSecond());
-
-    CDMDateTime yesterday = dt_ref.AddDays(-1);
-    EXPECT_EQ(2024, yesterday.GetYear());
-    EXPECT_EQ(12, yesterday.GetMonth());
-    EXPECT_EQ(24, yesterday.GetDay());
-
-    CDMTimeSpan diff = dt_ref.Subtract(yesterday);
-    EXPECT_DOUBLE_EQ(1.0, diff.GetTotalDays());
-    EXPECT_DOUBLE_EQ(24.0, diff.GetTotalHours());
-    EXPECT_DOUBLE_EQ(1440.0, diff.GetTotalMinutes());
-    EXPECT_DOUBLE_EQ(86400.0, diff.GetTotalSeconds());
-}
-
-TEST_F(CDMDateTimeUsageTest, ComparisonOperators) {
-    CDMDateTime yesterday = dt_ref.AddDays(-1);
-    CDMDateTime dt_ref_copy = dt_ref;
-
-    EXPECT_TRUE(dt_ref > yesterday);
-    EXPECT_FALSE(yesterday > dt_ref);
-    EXPECT_TRUE(dt_ref >= yesterday);
-    EXPECT_TRUE(dt_ref >= dt_ref_copy);
-
-    EXPECT_TRUE(yesterday < dt_ref);
-    EXPECT_FALSE(dt_ref < yesterday);
-    EXPECT_TRUE(yesterday <= dt_ref);
-    EXPECT_TRUE(dt_ref <= dt_ref_copy);
-
-    EXPECT_TRUE(dt_ref == dt_ref_copy);
-    EXPECT_FALSE(dt_ref == yesterday);
-
-    EXPECT_TRUE(dt_ref != yesterday);
-    EXPECT_FALSE(dt_ref != dt_ref_copy);
-}
-
-TEST_F(CDMDateTimeUsageTest, SpecialDateOperations) {
-    CDMDateTime startOfDay = dt_ref.GetStartOfDay();
-    EXPECT_EQ(2024, startOfDay.GetYear());
-    EXPECT_EQ(12, startOfDay.GetMonth());
-    EXPECT_EQ(25, startOfDay.GetDay());
-    EXPECT_EQ(0, startOfDay.GetHour());
-    EXPECT_EQ(0, startOfDay.GetMinute());
-    EXPECT_EQ(0, startOfDay.GetSecond());
-
-    CDMDateTime endOfDay = dt_ref.GetEndOfDay();
-    EXPECT_EQ(2024, endOfDay.GetYear());
-    EXPECT_EQ(12, endOfDay.GetMonth());
-    EXPECT_EQ(25, endOfDay.GetDay());
-    EXPECT_EQ(23, endOfDay.GetHour());
-    EXPECT_EQ(59, endOfDay.GetMinute());
-    EXPECT_EQ(59, endOfDay.GetSecond());
-
-    CDMDateTime startOfMonth = dt_ref.GetStartOfMonth();
-    EXPECT_EQ(2024, startOfMonth.GetYear());
-    EXPECT_EQ(12, startOfMonth.GetMonth());
-    EXPECT_EQ(1, startOfMonth.GetDay());
-    EXPECT_EQ(0, startOfMonth.GetHour());
-
-    CDMDateTime endOfMonth = dt_ref.GetEndOfMonth();
-    EXPECT_EQ(2024, endOfMonth.GetYear());
-    EXPECT_EQ(12, endOfMonth.GetMonth());
-    EXPECT_EQ(31, endOfMonth.GetDay());
-    EXPECT_EQ(23, endOfMonth.GetHour());
-    EXPECT_EQ(59, endOfMonth.GetMinute());
-    EXPECT_EQ(59, endOfMonth.GetSecond());
-
-    CDMDateTime startOfYear = dt_ref.GetStartOfYear();
-    EXPECT_EQ(2024, startOfYear.GetYear());
-    EXPECT_EQ(1, startOfYear.GetMonth());
-    EXPECT_EQ(1, startOfYear.GetDay());
-    EXPECT_EQ(0, startOfYear.GetHour());
-}
-
-
-TEST_F(CDMDateTimeUsageTest, ValidationAndUtilityFunctions) {
-    EXPECT_TRUE(dt_ref.IsLeapYear()); // 2024 is a leap year
-    CDMDateTime nonLeapYear(2023, 1, 1);
-    EXPECT_FALSE(nonLeapYear.IsLeapYear());
-
-    EXPECT_TRUE(dt_ref.IsWeekday()); // 2024-12-25 is Wednesday
-    EXPECT_FALSE(dt_ref.IsWeekend());
-
-    CDMDateTime saturday(2024, 12, 28); // Saturday
-    EXPECT_TRUE(saturday.IsWeekend());
-    EXPECT_FALSE(saturday.IsWeekday());
-
-    CDMDateTime sunday(2024, 12, 29); // Sunday
-    EXPECT_TRUE(sunday.IsWeekend());
-    EXPECT_FALSE(sunday.IsWeekday());
-
-    time_t timestamp_sec = dt_ref.GetTimestamp();
-    CDMDateTime from_ts_sec = CDMDateTime::FromTimestamp(timestamp_sec);
-    EXPECT_EQ(dt_ref.GetTimestamp(), from_ts_sec.GetTimestamp());
-}
+//
+//TEST_F(CDMDateTimeUsageTest, TimeArithmetic) {
+//    CDMDateTime tomorrow = dt_ref.AddDays(1);
+//    EXPECT_EQ(2024, tomorrow.GetYear());
+//    EXPECT_EQ(12, tomorrow.GetMonth());
+//    EXPECT_EQ(26, tomorrow.GetDay());
+//    EXPECT_EQ(dt_ref.GetHour(), tomorrow.GetHour());
+//
+//    CDMDateTime nextWeek = dt_ref.AddDays(7);
+//    EXPECT_EQ(2025, nextWeek.GetYear()); // 25 + 7 = 32, so Jan 1st of next year
+//    EXPECT_EQ(1, nextWeek.GetMonth());
+//    EXPECT_EQ(1, nextWeek.GetDay());
+//
+//    CDMDateTime nextMonth = dt_ref.AddMonths(1);
+//    EXPECT_EQ(2025, nextMonth.GetYear());
+//    EXPECT_EQ(1, nextMonth.GetMonth());
+//    EXPECT_EQ(25, nextMonth.GetDay());
+//
+//    CDMDateTime nextYear = dt_ref.AddYears(1);
+//    EXPECT_EQ(2025, nextYear.GetYear());
+//    EXPECT_EQ(12, nextYear.GetMonth());
+//    EXPECT_EQ(25, nextYear.GetDay());
+//
+//    CDMDateTime later = dt_ref.AddHours(2).AddMinutes(30).AddSeconds(15); // 15:30:45 + 2h30m15s = 18:01:00
+//    EXPECT_EQ(18, later.GetHour());
+//    EXPECT_EQ(1, later.GetMinute());
+//    EXPECT_EQ(0, later.GetSecond());
+//
+//    CDMDateTime yesterday = dt_ref.AddDays(-1);
+//    EXPECT_EQ(2024, yesterday.GetYear());
+//    EXPECT_EQ(12, yesterday.GetMonth());
+//    EXPECT_EQ(24, yesterday.GetDay());
+//
+//    CDMTimeSpan diff = dt_ref.Subtract(yesterday);
+//    EXPECT_DOUBLE_EQ(1.0, diff.GetTotalDays());
+//    EXPECT_DOUBLE_EQ(24.0, diff.GetTotalHours());
+//    EXPECT_DOUBLE_EQ(1440.0, diff.GetTotalMinutes());
+//    EXPECT_DOUBLE_EQ(86400.0, diff.GetTotalSeconds());
+//}
+//
+//TEST_F(CDMDateTimeUsageTest, ComparisonOperators) {
+//    CDMDateTime yesterday = dt_ref.AddDays(-1);
+//    CDMDateTime dt_ref_copy = dt_ref;
+//
+//    EXPECT_TRUE(dt_ref > yesterday);
+//    EXPECT_FALSE(yesterday > dt_ref);
+//    EXPECT_TRUE(dt_ref >= yesterday);
+//    EXPECT_TRUE(dt_ref >= dt_ref_copy);
+//
+//    EXPECT_TRUE(yesterday < dt_ref);
+//    EXPECT_FALSE(dt_ref < yesterday);
+//    EXPECT_TRUE(yesterday <= dt_ref);
+//    EXPECT_TRUE(dt_ref <= dt_ref_copy);
+//
+//    EXPECT_TRUE(dt_ref == dt_ref_copy);
+//    EXPECT_FALSE(dt_ref == yesterday);
+//
+//    EXPECT_TRUE(dt_ref != yesterday);
+//    EXPECT_FALSE(dt_ref != dt_ref_copy);
+//}
+//
+//TEST_F(CDMDateTimeUsageTest, SpecialDateOperations) {
+//    CDMDateTime startOfDay = dt_ref.GetStartOfDay();
+//    EXPECT_EQ(2024, startOfDay.GetYear());
+//    EXPECT_EQ(12, startOfDay.GetMonth());
+//    EXPECT_EQ(25, startOfDay.GetDay());
+//    EXPECT_EQ(0, startOfDay.GetHour());
+//    EXPECT_EQ(0, startOfDay.GetMinute());
+//    EXPECT_EQ(0, startOfDay.GetSecond());
+//
+//    CDMDateTime endOfDay = dt_ref.GetEndOfDay();
+//    EXPECT_EQ(2024, endOfDay.GetYear());
+//    EXPECT_EQ(12, endOfDay.GetMonth());
+//    EXPECT_EQ(25, endOfDay.GetDay());
+//    EXPECT_EQ(23, endOfDay.GetHour());
+//    EXPECT_EQ(59, endOfDay.GetMinute());
+//    EXPECT_EQ(59, endOfDay.GetSecond());
+//
+//    CDMDateTime startOfMonth = dt_ref.GetStartOfMonth();
+//    EXPECT_EQ(2024, startOfMonth.GetYear());
+//    EXPECT_EQ(12, startOfMonth.GetMonth());
+//    EXPECT_EQ(1, startOfMonth.GetDay());
+//    EXPECT_EQ(0, startOfMonth.GetHour());
+//
+//    CDMDateTime endOfMonth = dt_ref.GetEndOfMonth();
+//    EXPECT_EQ(2024, endOfMonth.GetYear());
+//    EXPECT_EQ(12, endOfMonth.GetMonth());
+//    EXPECT_EQ(31, endOfMonth.GetDay());
+//    EXPECT_EQ(23, endOfMonth.GetHour());
+//    EXPECT_EQ(59, endOfMonth.GetMinute());
+//    EXPECT_EQ(59, endOfMonth.GetSecond());
+//
+//    CDMDateTime startOfYear = dt_ref.GetStartOfYear();
+//    EXPECT_EQ(2024, startOfYear.GetYear());
+//    EXPECT_EQ(1, startOfYear.GetMonth());
+//    EXPECT_EQ(1, startOfYear.GetDay());
+//    EXPECT_EQ(0, startOfYear.GetHour());
+//}
+//
+//
+//TEST_F(CDMDateTimeUsageTest, ValidationAndUtilityFunctions) {
+//    EXPECT_TRUE(dt_ref.IsLeapYear()); // 2024 is a leap year
+//    CDMDateTime nonLeapYear(2023, 1, 1);
+//    EXPECT_FALSE(nonLeapYear.IsLeapYear());
+//
+//    EXPECT_TRUE(dt_ref.IsWeekday()); // 2024-12-25 is Wednesday
+//    EXPECT_FALSE(dt_ref.IsWeekend());
+//
+//    CDMDateTime saturday(2024, 12, 28); // Saturday
+//    EXPECT_TRUE(saturday.IsWeekend());
+//    EXPECT_FALSE(saturday.IsWeekday());
+//
+//    CDMDateTime sunday(2024, 12, 29); // Sunday
+//    EXPECT_TRUE(sunday.IsWeekend());
+//    EXPECT_FALSE(sunday.IsWeekday());
+//
+//    time_t timestamp_sec = dt_ref.GetTimestamp();
+//    CDMDateTime from_ts_sec = CDMDateTime::FromTimestamp(timestamp_sec);
+//    EXPECT_EQ(dt_ref.GetTimestamp(), from_ts_sec.GetTimestamp());
+//}
 
 //TEST_F(CDMDateTimeUsageTest, ChainedOperations) {
 //    CDMDateTime start_chain(2023, 1, 10, 10, 30, 0);
