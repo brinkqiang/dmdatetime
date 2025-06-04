@@ -20,6 +20,7 @@ set(CMAKE_SHARED_LIBRARY_PREFIX "")
 
 ModuleImportAll("thirdparty")
 
+InterfaceImport("dmdatetime" "include" "")
 if(PROJECT_IS_TOP_LEVEL)
-    ExeImport("test" "dmtest")
+    ExeImport("test" "dmtest;dmdatetime")
 endif()
