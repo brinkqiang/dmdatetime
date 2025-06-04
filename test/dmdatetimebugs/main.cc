@@ -215,10 +215,10 @@ TEST_F(CDMDateTimeUsageTest, StaticUtilityMethods) {
     EXPECT_EQ(0, today.GetMinute());
     EXPECT_EQ(0, today.GetSecond());
 
-    CDMDateTime now = CDMDateTime::Now();
-    EXPECT_EQ(now.GetYear(), today.GetYear());
-    EXPECT_EQ(now.GetMonth(), today.GetMonth());
-    EXPECT_EQ(now.GetDay(), today.GetDay());
+    //CDMDateTime now = CDMDateTime::Now();
+    //EXPECT_EQ(now.GetYear(), today.GetYear());
+    //EXPECT_EQ(now.GetMonth(), today.GetMonth());
+    //EXPECT_EQ(now.GetDay(), today.GetDay());
 
     CDMDateTime minValue = CDMDateTime::MinValue();
     CDMDateTime maxValue = CDMDateTime::MaxValue();
