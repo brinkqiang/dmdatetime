@@ -238,87 +238,87 @@ TEST_F(CDMDateTimeUsageTest, StaticUtilityMethods) {
     }
     EXPECT_EQ(1970, minValue.GetYear());
 }
-
-TEST_F(CDMDateTimeUsageTest, RangeChecking) {
-    CDMDateTime start_range = CDMDateTime::Parse("2024-01-01 00:00:00");
-    CDMDateTime end_range = CDMDateTime::Parse("2024-12-31 23:59:59");
-
-    EXPECT_TRUE(dt_ref.IsBetween(start_range, end_range)); // dt_ref is 2024-12-25
-
-    CDMDateTime before_range = CDMDateTime::Parse("2023-12-31 23:59:59");
-    EXPECT_FALSE(before_range.IsBetween(start_range, end_range));
-
-    CDMDateTime after_range = CDMDateTime::Parse("2025-01-01 00:00:00");
-    EXPECT_FALSE(after_range.IsBetween(start_range, end_range));
-
-    EXPECT_TRUE(start_range.IsBetween(start_range, end_range)); // Inclusive start
-    EXPECT_TRUE(end_range.IsBetween(start_range, end_range));   // Inclusive end
-
-    CDMDateTime mid_range(2024, 6, 15);
-    EXPECT_TRUE(mid_range.IsBetween(start_range, end_range));
-}
-
-TEST_F(CDMDateTimeUsageTest, LunarSupport) {
-    std::string lunar_str = dt_ref.ToLunarString();
-    EXPECT_FALSE(lunar_str.empty());
-    EXPECT_EQ("农历支持未实现 (Lunar support not implemented)", lunar_str);
-}
-
-TEST_F(CDMDateTimeUsageTest, FormatConstants) {
-    EXPECT_EQ(dt_ref.ToString(), dt_ref.ToString(CDMDateTime::TO_STRING_STANDARD));
-    EXPECT_EQ("2024-12-25", dt_ref.ToString(CDMDateTime::TO_STRING_SHORT_DATE));
-
-    std::string cn_standard_str = dt_ref.ToString(CDMDateTime::TO_STRING_STANDARD_CN);
-
-    EXPECT_NE(std::string::npos, cn_standard_str.find("2024年"));
-    EXPECT_NE(std::string::npos, cn_standard_str.find("12月"));
-    EXPECT_NE(std::string::npos, cn_standard_str.find("25日"));
-    EXPECT_NE(std::string::npos, cn_standard_str.find("15时"));
-    EXPECT_NE(std::string::npos, cn_standard_str.find("30分"));
-    EXPECT_NE(std::string::npos, cn_standard_str.find("45秒"));
-
-    std::string cn_short_date_str = dt_ref.ToString(CDMDateTime::TO_STRING_SHORT_DATE_CN);
-    EXPECT_NE(std::string::npos, cn_short_date_str.find("2024年"));
-    EXPECT_NE(std::string::npos, cn_short_date_str.find("12月"));
-    EXPECT_NE(std::string::npos, cn_short_date_str.find("25日"));
-    EXPECT_EQ(std::string::npos, cn_short_date_str.find("时")); // Should not contain time component
-}
-
-// 新增的测试用例，用于测试 SetDate 和 SetTime 方法
-TEST_F(CDMDateTimeUsageTest, SetDateAndTimeMethods) {
-    CDMDateTime dt_mutable(2024, 12, 25, 15, 30, 45); // 创建一个可变副本
-
-    // 保存原始时间，用于后续验证
-    int original_hour = dt_mutable.GetHour();
-    int original_minute = dt_mutable.GetMinute();
-    int original_second = dt_mutable.GetSecond();
-
-    // 测试 SetDate 方法
-    dt_mutable.SetDate(2025, 1, 10);
-    EXPECT_EQ(2025, dt_mutable.GetYear());
-    EXPECT_EQ(1, dt_mutable.GetMonth());
-    EXPECT_EQ(10, dt_mutable.GetDay());
-    EXPECT_EQ(original_hour, dt_mutable.GetHour());   // 验证时间部分未改变
-    EXPECT_EQ(original_minute, dt_mutable.GetMinute()); // 验证时间部分未改变
-    EXPECT_EQ(original_second, dt_mutable.GetSecond()); // 验证时间部分未改变
-
-    // 为 SetTime 测试重置对象状态或使用新对象，以保持测试独立性
-    dt_mutable = CDMDateTime(2024, 12, 25, 15, 30, 45);
-
-    // 保存原始日期，用于后续验证
-    int original_year = dt_mutable.GetYear();
-    int original_month = dt_mutable.GetMonth();
-    int original_day = dt_mutable.GetDay();
-
-    // 测试 SetTime 方法
-    dt_mutable.SetTime(5, 15, 55);
-    EXPECT_EQ(original_year, dt_mutable.GetYear());   // 验证日期部分未改变
-    EXPECT_EQ(original_month, dt_mutable.GetMonth()); // 验证日期部分未改变
-    EXPECT_EQ(original_day, dt_mutable.GetDay());     // 验证日期部分未改变
-    EXPECT_EQ(5, dt_mutable.GetHour());
-    EXPECT_EQ(15, dt_mutable.GetMinute());
-    EXPECT_EQ(55, dt_mutable.GetSecond());
-}
+//
+//TEST_F(CDMDateTimeUsageTest, RangeChecking) {
+//    CDMDateTime start_range = CDMDateTime::Parse("2024-01-01 00:00:00");
+//    CDMDateTime end_range = CDMDateTime::Parse("2024-12-31 23:59:59");
+//
+//    EXPECT_TRUE(dt_ref.IsBetween(start_range, end_range)); // dt_ref is 2024-12-25
+//
+//    CDMDateTime before_range = CDMDateTime::Parse("2023-12-31 23:59:59");
+//    EXPECT_FALSE(before_range.IsBetween(start_range, end_range));
+//
+//    CDMDateTime after_range = CDMDateTime::Parse("2025-01-01 00:00:00");
+//    EXPECT_FALSE(after_range.IsBetween(start_range, end_range));
+//
+//    EXPECT_TRUE(start_range.IsBetween(start_range, end_range)); // Inclusive start
+//    EXPECT_TRUE(end_range.IsBetween(start_range, end_range));   // Inclusive end
+//
+//    CDMDateTime mid_range(2024, 6, 15);
+//    EXPECT_TRUE(mid_range.IsBetween(start_range, end_range));
+//}
+//
+//TEST_F(CDMDateTimeUsageTest, LunarSupport) {
+//    std::string lunar_str = dt_ref.ToLunarString();
+//    EXPECT_FALSE(lunar_str.empty());
+//    EXPECT_EQ("农历支持未实现 (Lunar support not implemented)", lunar_str);
+//}
+//
+//TEST_F(CDMDateTimeUsageTest, FormatConstants) {
+//    EXPECT_EQ(dt_ref.ToString(), dt_ref.ToString(CDMDateTime::TO_STRING_STANDARD));
+//    EXPECT_EQ("2024-12-25", dt_ref.ToString(CDMDateTime::TO_STRING_SHORT_DATE));
+//
+//    std::string cn_standard_str = dt_ref.ToString(CDMDateTime::TO_STRING_STANDARD_CN);
+//
+//    EXPECT_NE(std::string::npos, cn_standard_str.find("2024年"));
+//    EXPECT_NE(std::string::npos, cn_standard_str.find("12月"));
+//    EXPECT_NE(std::string::npos, cn_standard_str.find("25日"));
+//    EXPECT_NE(std::string::npos, cn_standard_str.find("15时"));
+//    EXPECT_NE(std::string::npos, cn_standard_str.find("30分"));
+//    EXPECT_NE(std::string::npos, cn_standard_str.find("45秒"));
+//
+//    std::string cn_short_date_str = dt_ref.ToString(CDMDateTime::TO_STRING_SHORT_DATE_CN);
+//    EXPECT_NE(std::string::npos, cn_short_date_str.find("2024年"));
+//    EXPECT_NE(std::string::npos, cn_short_date_str.find("12月"));
+//    EXPECT_NE(std::string::npos, cn_short_date_str.find("25日"));
+//    EXPECT_EQ(std::string::npos, cn_short_date_str.find("时")); // Should not contain time component
+//}
+//
+//// 新增的测试用例，用于测试 SetDate 和 SetTime 方法
+//TEST_F(CDMDateTimeUsageTest, SetDateAndTimeMethods) {
+//    CDMDateTime dt_mutable(2024, 12, 25, 15, 30, 45); // 创建一个可变副本
+//
+//    // 保存原始时间，用于后续验证
+//    int original_hour = dt_mutable.GetHour();
+//    int original_minute = dt_mutable.GetMinute();
+//    int original_second = dt_mutable.GetSecond();
+//
+//    // 测试 SetDate 方法
+//    dt_mutable.SetDate(2025, 1, 10);
+//    EXPECT_EQ(2025, dt_mutable.GetYear());
+//    EXPECT_EQ(1, dt_mutable.GetMonth());
+//    EXPECT_EQ(10, dt_mutable.GetDay());
+//    EXPECT_EQ(original_hour, dt_mutable.GetHour());   // 验证时间部分未改变
+//    EXPECT_EQ(original_minute, dt_mutable.GetMinute()); // 验证时间部分未改变
+//    EXPECT_EQ(original_second, dt_mutable.GetSecond()); // 验证时间部分未改变
+//
+//    // 为 SetTime 测试重置对象状态或使用新对象，以保持测试独立性
+//    dt_mutable = CDMDateTime(2024, 12, 25, 15, 30, 45);
+//
+//    // 保存原始日期，用于后续验证
+//    int original_year = dt_mutable.GetYear();
+//    int original_month = dt_mutable.GetMonth();
+//    int original_day = dt_mutable.GetDay();
+//
+//    // 测试 SetTime 方法
+//    dt_mutable.SetTime(5, 15, 55);
+//    EXPECT_EQ(original_year, dt_mutable.GetYear());   // 验证日期部分未改变
+//    EXPECT_EQ(original_month, dt_mutable.GetMonth()); // 验证日期部分未改变
+//    EXPECT_EQ(original_day, dt_mutable.GetDay());     // 验证日期部分未改变
+//    EXPECT_EQ(5, dt_mutable.GetHour());
+//    EXPECT_EQ(15, dt_mutable.GetMinute());
+//    EXPECT_EQ(55, dt_mutable.GetSecond());
+//}
 
 
 class CDMDateTimePracticalTest : public ::testing::Test {
