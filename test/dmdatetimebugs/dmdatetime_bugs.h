@@ -197,7 +197,7 @@ public:
     std::string ToString(const std::string& format_string = "%04d-%02d-%02d %02d:%02d:%02d") const {
         char buffer[128] = {0};
         std::tm t_local = to_tm_local();
-        snprintf(buffer, sizeof(buffer), format_string.c_str(),
+        std::snprintf(buffer, sizeof(buffer), format_string.c_str(),
             t_local.tm_year + 1900,
             t_local.tm_mon + 1,
             t_local.tm_mday,
@@ -215,7 +215,7 @@ public:
     std::string ToUTCString() const {
         char buffer[128] = {0};
         std::tm t_utc_val = to_tm_utc();
-        size_t len = strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S UTC", &t_utc_val);
+        size_t len = std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S UTC", &t_utc_val);
         if (len == 0) {
             buffer[0] = '\0';
         }
@@ -235,7 +235,7 @@ public:
         std::tm t = to_tm_local();
         t.tm_year += years;
         t.tm_isdst = -1;
-        std::time_t tt = mktime(&t);
+        std::time_t tt = std::mktime(&t);
         if (tt == -1) throw std::runtime_error("Resulting date out of range after AddYears");
         return CDMDateTime(std::chrono::system_clock::from_time_t(tt));
     }
@@ -250,7 +250,7 @@ public:
             t.tm_year--;
         }
         t.tm_isdst = -1;
-        std::time_t tt = mktime(&t);
+        std::time_t tt = std::mktime(&t);
         if (tt == -1) throw std::runtime_error("Resulting date out of range after AddMonths");
         return CDMDateTime(std::chrono::system_clock::from_time_t(tt));
     }
