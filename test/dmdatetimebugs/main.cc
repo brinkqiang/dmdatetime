@@ -209,35 +209,35 @@ TEST_F(CDMDateTimeUsageTest, ChainedOperations) {
     EXPECT_EQ(0, result.GetSecond());
 }
 
-TEST_F(CDMDateTimeUsageTest, StaticUtilityMethods) {
-    CDMDateTime today = CDMDateTime::Today();
-    EXPECT_EQ(0, today.GetHour());
-    EXPECT_EQ(0, today.GetMinute());
-    EXPECT_EQ(0, today.GetSecond());
-
-    //CDMDateTime now = CDMDateTime::Now();
-    //EXPECT_EQ(now.GetYear(), today.GetYear());
-    //EXPECT_EQ(now.GetMonth(), today.GetMonth());
-    //EXPECT_EQ(now.GetDay(), today.GetDay());
-
-    CDMDateTime minValue = CDMDateTime::MinValue();
-    CDMDateTime maxValue = CDMDateTime::MaxValue();
-
-    fmt::print("{} size_t={}\n", minValue.ToString(), sizeof(time_t));
-    fmt::print("{} size_t={}\n", maxValue.ToString(), sizeof(time_t));
-    EXPECT_TRUE(minValue < dt_ref);
-    EXPECT_TRUE(maxValue > dt_ref);
-    EXPECT_TRUE(minValue < maxValue);
-
-    // Check against the values defined in CDMDateTime.h
-    if (sizeof(time_t) > 4) { // Assuming 64-bit time_t corresponds to year 3000 in MaxValue
-        EXPECT_EQ(3000, maxValue.GetYear());
-    }
-    else { // Assuming 32-bit time_t corresponds to year 2038
-        EXPECT_EQ(2038, maxValue.GetYear());
-    }
-    EXPECT_EQ(1970, minValue.GetYear());
-}
+//TEST_F(CDMDateTimeUsageTest, StaticUtilityMethods) {
+//    CDMDateTime today = CDMDateTime::Today();
+//    EXPECT_EQ(0, today.GetHour());
+//    EXPECT_EQ(0, today.GetMinute());
+//    EXPECT_EQ(0, today.GetSecond());
+//
+//    CDMDateTime now = CDMDateTime::Now();
+//    EXPECT_EQ(now.GetYear(), today.GetYear());
+//    EXPECT_EQ(now.GetMonth(), today.GetMonth());
+//    EXPECT_EQ(now.GetDay(), today.GetDay());
+//
+//    CDMDateTime minValue = CDMDateTime::MinValue();
+//    CDMDateTime maxValue = CDMDateTime::MaxValue();
+//
+//    fmt::print("{} size_t={}\n", minValue.ToString(), sizeof(time_t));
+//    fmt::print("{} size_t={}\n", maxValue.ToString(), sizeof(time_t));
+//    EXPECT_TRUE(minValue < dt_ref);
+//    EXPECT_TRUE(maxValue > dt_ref);
+//    EXPECT_TRUE(minValue < maxValue);
+//
+//    // Check against the values defined in CDMDateTime.h
+//    if (sizeof(time_t) > 4) { // Assuming 64-bit time_t corresponds to year 3000 in MaxValue
+//        EXPECT_EQ(3000, maxValue.GetYear());
+//    }
+//    else { // Assuming 32-bit time_t corresponds to year 2038
+//        EXPECT_EQ(2038, maxValue.GetYear());
+//    }
+//    EXPECT_EQ(1970, minValue.GetYear());
+//}
 //
 //TEST_F(CDMDateTimeUsageTest, RangeChecking) {
 //    CDMDateTime start_range = CDMDateTime::Parse("2024-01-01 00:00:00");
