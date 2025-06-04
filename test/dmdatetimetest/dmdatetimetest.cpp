@@ -435,9 +435,9 @@ TEST_F(CDMDateTimePracticalTest, 3000)
 
     fmt::print("{}\n", local_tm.tm_year);
 
-    CDMDateTime xdata(3000, 2, 1, 8, 0, 0);
+    CDMDateTime xdata(3000, 1, 1, 12, 0, 0);
 
-    fmt::print("{}\n", xdata.ToString());
+    fmt::print("{} {}\n", xdata.ToString(), xdata.GetYear());
 
 
 
