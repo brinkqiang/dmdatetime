@@ -231,12 +231,12 @@ TEST_F(CDMDateTimeUsageTest, StaticUtilityMethods) {
 
     // Check against the values defined in CDMDateTime.h
     if (sizeof(time_t) > 4) { // Assuming 64-bit time_t corresponds to year 3000 in MaxValue
-        EXPECT_EQ(3000, maxValue.GetYear());
+        EXPECT_EQ(CDMDateTime::DMDATETIME_YEAR_MAX, maxValue.GetYear());
     }
     else { // Assuming 32-bit time_t corresponds to year 2038
         EXPECT_EQ(2038, maxValue.GetYear());
     }
-    EXPECT_EQ(1970, minValue.GetYear());
+    EXPECT_EQ(CDMDateTime::DMDATETIME_YEAR_MIN, minValue.GetYear());
 }
 
 TEST_F(CDMDateTimeUsageTest, RangeChecking) {
@@ -410,30 +410,6 @@ TEST_F(CDMDateTimePracticalTest, 3000)
     fmt::print("{}\n", maxValue.GetYear());
 
     fmt::print("{}\n", maxValue.ToString());
-
-
-    std::tm t{};
-    t.tm_year = 3000 - 1900;    // tm_year 是自1900年起的年数
-    t.tm_mon = 2 - 1;       // tm_mon 是从0开始的月份 (0=一月, 11=十二月)
-    t.tm_mday = 0;            // tm_mday 是一月中的日期 (1-31)
-    t.tm_hour = 0;           // tm_hour 是一天中的小时 (0-23)
-    t.tm_min = 0;          // tm_min 是一小时中的分钟 (0-59)
-    t.tm_sec = 0;          // tm_sec 是一分钟中的秒数 (0-59)
-    t.tm_isdst = -1;            // 夏令时信息，-1表示让系统自动判断
-
-    std::time_t tt = std::mktime(&t); // 将 std::tm 结构转换为 time_t 类型
-
-    auto time_point_ = std::chrono::system_clock::from_time_t(tt);
-
-    std::time_t ttt = std::chrono::system_clock::to_time_t(time_point_);
-    std::tm local_tm{};
-#ifdef _WIN32
-    localtime_s(&local_tm, &ttt);
-#else
-    localtime_r(&tt, &local_tm);
-#endif
-
-    fmt::print("{}\n", local_tm.tm_year);
 
     CDMDateTime xdata;
     xdata.SetDateTime(3000, 1, 1, 12, 0, 0);
