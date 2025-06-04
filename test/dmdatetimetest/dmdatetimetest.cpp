@@ -414,7 +414,7 @@ TEST_F(CDMDateTimePracticalTest, 3000)
 
     std::tm t{};
     t.tm_year = 3000 - 1900;    // tm_year 是自1900年起的年数
-    t.tm_mon = 1 - 1;       // tm_mon 是从0开始的月份 (0=一月, 11=十二月)
+    t.tm_mon = 2 - 1;       // tm_mon 是从0开始的月份 (0=一月, 11=十二月)
     t.tm_mday = 0;            // tm_mday 是一月中的日期 (1-31)
     t.tm_hour = 0;           // tm_hour 是一天中的小时 (0-23)
     t.tm_min = 0;          // tm_min 是一小时中的分钟 (0-59)
@@ -425,10 +425,10 @@ TEST_F(CDMDateTimePracticalTest, 3000)
 
     auto time_point_ = std::chrono::system_clock::from_time_t(tt);
 
-    std::time_t tt = std::chrono::system_clock::to_time_t(time_point_);
+    std::time_t ttt = std::chrono::system_clock::to_time_t(time_point_);
     std::tm local_tm{};
 #ifdef _WIN32
-    localtime_s(&local_tm, &tt);
+    localtime_s(&local_tm, &ttt);
 #else
     localtime_r(&tt, &local_tm);
 #endif
