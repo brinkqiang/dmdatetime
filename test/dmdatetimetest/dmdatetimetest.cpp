@@ -68,7 +68,7 @@ TEST_F(CDMDateTimeUsageTest, CreationMethods) {
 
 TEST_F(CDMDateTimeUsageTest, FormattingOutput) {
     EXPECT_EQ("2024-12-25 15:30:45", dt_ref.ToString());
-    EXPECT_EQ("2024-12-25", dt_ref.ToString("%Y-%m-%d"));
+    EXPECT_EQ("2024-12-25", dt_ref.ToString(CDMDateTime::TO_STRING_SHORT_DATE));
 
     // ISOString and UTCString depend on implementation specifics and local timezone
     // For ISOString, a common representation of local time.
