@@ -333,12 +333,7 @@ public:
     }
 
     static CDMDateTime MaxValue() {
-        if (sizeof(std::time_t) > 4) {
-            return CDMDateTime(3000, 1, 1, 8, 0, 0);
-        }
-        else {
-            return CDMDateTime(2038, 1, 19, 3, 14, 7);
-        }
+        return CDMDateTime(3000, 1, 1, 8, 0, 0);
     }
 
     bool IsBetween(const CDMDateTime& start, const CDMDateTime& end, bool inclusiveStart = true, bool inclusiveEnd = true) const {
