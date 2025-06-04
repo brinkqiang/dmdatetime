@@ -19,8 +19,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef DMDATETIME_H_
-#define DMDATETIME_H_
+#ifndef __DMDATE_TIME_H__
+#define __DMDATE_TIME_H__
 
 #include <string>
 #include <chrono>
@@ -409,4 +409,4 @@ const char* CDMDateTime::TO_STRING_STANDARD_MS_CN = "%Y年%m月%d日 %H时%M分%
 const char* CDMDateTime::TO_STRING_SHORT_DATE_CN = "%Y年%m月%d日";
 
 
-#endif // DMDATETIME_H_
+#endif // __DMDATE_TIME_H__
