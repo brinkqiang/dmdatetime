@@ -407,7 +407,7 @@ TEST_F(CDMDateTimePracticalTest, 3000)
 {
     CDMDateTime maxValue = CDMDateTime::MaxValue();
 
-    fmt::print("{} size_t={}\n", maxValue.ToString(), sizeof(time_t));
+    fmt::print("{}\n", maxValue.ToString());
 
     int start_year = 2150;
     int end_year_search_limit = 3000;
