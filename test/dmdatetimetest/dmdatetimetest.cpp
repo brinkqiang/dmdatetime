@@ -407,3 +407,15 @@ TEST_F(CDMDateTimePracticalTest, OperationTimeCalculation) {
     CDMTimeSpan elapsed2 = endTime2.Subtract(startTime2);
     EXPECT_DOUBLE_EQ(90, elapsed2.GetTotalSeconds()); // 60 + 30 = 90 seconds
 }
+
+TEST_F(CDMDateTimePracticalTest, Subtract) {
+    CDMDateTime startTime(2024, 1, 1, 10, 0, 0);
+    CDMDateTime endTime(2024, 1, 1, 11, 30, 1);
+
+    fmt::print("{}\n", startTime.ToString());
+    fmt::print("{}\n", endTime.Subtract(startTime).GetTotalSeconds());
+    fmt::print("{}\n", endTime.Subtract(startTime).GetTotalMinutes());
+    fmt::print("{}\n", endTime.Subtract(startTime).GetTotalHours());
+
+
+}
