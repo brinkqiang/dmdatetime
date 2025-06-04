@@ -435,6 +435,12 @@ TEST_F(CDMDateTimePracticalTest, 3000)
 
     fmt::print("{}\n", local_tm.tm_year);
 
+    CDMDateTime xdata(3000, 2, 1, 8, 0, 0);
+
+    fmt::print("{}\n", xdata.ToString());
+
+
+
     int start_year = 2150;
     int end_year_search_limit = 3000;
 
