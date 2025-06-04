@@ -137,14 +137,6 @@ private:
 
     explicit CDMDateTime(std::chrono::system_clock::time_point tp) : time_point_(tp) {}
 
-    static void replace_all(std::string& str, const std::string& from, const std::string& to) {
-        if (from.empty()) return;
-        size_t start_pos = 0;
-        while ((start_pos = str.find(from, start_pos)) != std::string::npos) {
-            str.replace(start_pos, from.length(), to);
-            start_pos += to.length();
-        }
-    }
 public:
     // static
 
@@ -342,7 +334,7 @@ public:
 
     static CDMDateTime MaxValue() {
         if (sizeof(std::time_t) > 4) {
-            return CDMDateTime(3000, 12, 31, 23, 59, 59);
+            return CDMDateTime(2500, 12, 31, 23, 59, 59);
         }
         else {
             return CDMDateTime(2038, 1, 19, 3, 14, 7);
