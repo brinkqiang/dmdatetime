@@ -431,10 +431,6 @@ TEST_F(CDMDateTimePracticalTest, 3000)
                     + std::to_string(retrieved_month) + "-"
                     + std::to_string(retrieved_day);
             }
-            else
-            {
-                fmt::print("{}\n", dt_test_object.ToString());
-            }
         }
         catch (const std::runtime_error& e) {
             construction_ok = false;
