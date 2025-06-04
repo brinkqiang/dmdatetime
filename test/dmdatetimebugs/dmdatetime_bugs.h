@@ -39,7 +39,7 @@ private:
 
 public:
     explicit CDMTimeSpan(std::chrono::seconds s) : duration_(s) {}
-    CDMTimeSpan(time_t totalSeconds = 0) : duration_(totalSeconds) {}
+    CDMTimeSpan(std::time_t totalSeconds = 0) : duration_(totalSeconds) {}
 
     long long GetTotalDays() const {
         return std::chrono::duration_cast<std::chrono::hours>(duration_).count() / 24;
@@ -50,8 +50,8 @@ public:
     long long GetTotalMinutes() const {
         return std::chrono::duration_cast<std::chrono::minutes>(duration_).count();
     }
-    time_t GetTotalSeconds() const {
-        return static_cast<time_t>(duration_.count());
+    std::time_t GetTotalSeconds() const {
+        return static_cast<std::time_t>(duration_.count());
     }
 
     CDMTimeSpan operator+(const CDMTimeSpan& other) const {
@@ -72,9 +72,9 @@ class CDMDateTime {
 private:
     std::chrono::system_clock::time_point time_point_;
 
-    tm to_tm_local() const {
-        time_t tt = std::chrono::system_clock::to_time_t(time_point_);
-        tm local_tm{};
+    std::tm to_tm_local() const {
+        std::time_t tt = std::chrono::system_clock::to_time_t(time_point_);
+        std::tm local_tm{};
 #ifdef _WIN32
         localtime_s(&local_tm, &tt);
 #else
@@ -83,9 +83,9 @@ private:
         return local_tm;
     }
 
-    tm to_tm_utc() const {
-        time_t tt = std::chrono::system_clock::to_time_t(time_point_);
-        tm utc_tm{};
+    std::tm to_tm_utc() const {
+        std::time_t tt = std::chrono::system_clock::to_time_t(time_point_);
+        std::tm utc_tm{};
 #ifdef _WIN32
         gmtime_s(&utc_tm, &tt);
 #else
