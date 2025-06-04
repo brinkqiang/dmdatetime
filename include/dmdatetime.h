@@ -211,7 +211,7 @@ public:
     }
 
     std::string ToUTCString() const {
-        char buffer[128];
+        char buffer[128] = {0};
         std::tm t_utc_val = to_tm_utc();
         size_t len = strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S UTC", &t_utc_val);
         if (len == 0) {
