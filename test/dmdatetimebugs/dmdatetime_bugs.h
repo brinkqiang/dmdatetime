@@ -72,9 +72,9 @@ class CDMDateTime {
 private:
     std::chrono::system_clock::time_point time_point_;
 
-    std::tm to_tm_local() const {
-        std::time_t tt = std::chrono::system_clock::to_time_t(time_point_);
-        std::tm local_tm{};
+    tm to_tm_local() const {
+        time_t tt = std::chrono::system_clock::to_time_t(time_point_);
+        tm local_tm{};
 #ifdef _WIN32
         localtime_s(&local_tm, &tt);
 #else
@@ -83,9 +83,9 @@ private:
         return local_tm;
     }
 
-    std::tm to_tm_utc() const {
-        std::time_t tt = std::chrono::system_clock::to_time_t(time_point_);
-        std::tm utc_tm{};
+    tm to_tm_utc() const {
+        time_t tt = std::chrono::system_clock::to_time_t(time_point_);
+        tm utc_tm{};
 #ifdef _WIN32
         gmtime_s(&utc_tm, &tt);
 #else
