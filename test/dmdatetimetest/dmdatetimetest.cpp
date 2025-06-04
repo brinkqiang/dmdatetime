@@ -405,91 +405,46 @@ TEST_F(CDMDateTimePracticalTest, Subtract) {
 
 TEST_F(CDMDateTimePracticalTest, 3000)
 {
-    std::cout << "Testing mktime() practical limits for future years on this system." << std::endl;
-    std::cout << "sizeof(time_t): " << sizeof(time_t) << " bytes." << std::endl;
-    std::cout << "-------------------------------------------------------------" << std::endl;
-
     int start_year = 2150;
     int end_year_search_limit = 3000;
 
-    std::tm t_input = {};
-    t_input.tm_mon = 0;
-    t_input.tm_mday = 1;
-    t_input.tm_hour = 12;
-    t_input.tm_min = 0;
-    t_input.tm_sec = 0;
-    t_input.tm_isdst = -1;
-
-    int first_failed_year = -1;
-    std::string failure_reason;
-
     for (int year_to_test = start_year; year_to_test <= end_year_search_limit; ++year_to_test) {
-        t_input.tm_year = year_to_test - 1900;
+        CDMDateTime dt_test_object;
+        bool construction_ok = true;
+        std::string error_message;
 
-        time_t tt_result = std::mktime(&t_input);
+        try {
+            dt_test_object = CDMDateTime(year_to_test, 1, 1, 12, 0, 0);
 
-        std::cout << "Testing Year: " << year_to_test << " (tm_year=" << t_input.tm_year << ")" << std::endl;
-        std::cout << "  mktime returned time_t: " << tt_result << std::endl;
+            int retrieved_year = dt_test_object.GetYear();
+            int retrieved_month = dt_test_object.GetMonth();
+            int retrieved_day = dt_test_object.GetDay();
 
-        if (tt_result == (time_t)-1) {
-            std::cout << "  Result: mktime() returned -1. Explicit failure." << std::endl;
-            first_failed_year = year_to_test;
-            failure_reason = "mktime() returned -1";
+            if (retrieved_year != year_to_test || retrieved_month != 1 || retrieved_day != 1) {
+                construction_ok = false;
+                error_message = "Component mismatch. Expected: " + std::to_string(year_to_test) + "-01-01, "
+                    + "Got: " + std::to_string(retrieved_year) + "-"
+                    + std::to_string(retrieved_month) + "-"
+                    + std::to_string(retrieved_day);
+            }
+        }
+        catch (const std::runtime_error& e) {
+            construction_ok = false;
+            error_message = "std::runtime_error caught: " + std::string(e.what());
+        }
+        catch (const std::exception& e) {
+            construction_ok = false;
+            error_message = "std::exception caught: " + std::string(e.what());
+        }
+        catch (...) {
+            construction_ok = false;
+            error_message = "Unknown exception caught during CDMDateTime construction or validation.";
+        }
+
+        if (!construction_ok) {
+            std::cerr << "Error encountered when testing year: " << year_to_test << std::endl;
+            std::cerr << "Error details: " << error_message << std::endl;
             break;
         }
-        else {
-            std::tm tm_output = {};
-#ifdef __linux__
-            if (localtime_r(&tt_result, &tm_output) == nullptr) {
-#else
-            std::tm* tm_ptr_output = std::localtime(&tt_result);
-            if (tm_ptr_output == nullptr) {
-#endif
-                std::cout << "  Result: localtime_r/localtime failed to convert time_t back." << std::endl;
-                first_failed_year = year_to_test;
-                failure_reason = "localtime_r/localtime failed";
-                break;
-            }
-#ifndef __linux__
-            if (tm_ptr_output != nullptr) tm_output = *tm_ptr_output;
-#endif
-
-            int output_year = tm_output.tm_year + 1900;
-            std::cout << "  time_t converted back to (localtime): " << output_year
-                << "-" << std::setw(2) << std::setfill('0') << tm_output.tm_mon + 1
-                << "-" << std::setw(2) << std::setfill('0') << tm_output.tm_mday
-                << std::endl;
-
-            if (output_year != year_to_test) {
-                std::cout << "  Result: Year mismatch! Input: " << year_to_test
-                    << ", Output: " << output_year << ". Subtle failure." << std::endl;
-                first_failed_year = year_to_test;
-                failure_reason = "Year mismatch (Input: " + std::to_string(year_to_test) +
-                    ", Output: " + std::to_string(output_year) + ")";
-                break;
-            }
-            else if (tm_output.tm_mon != 0 || tm_output.tm_mday != 1) {
-                std::cout << "  Result: Month/Day mismatch for Jan 1st! Output mon: " << tm_output.tm_mon + 1
-                    << ", mday: " << tm_output.tm_mday << ". Subtle failure." << std::endl;
-                first_failed_year = year_to_test;
-                failure_reason = "Month/Day mismatch (Expected Jan 1st, Got: M=" + std::to_string(tm_output.tm_mon + 1) +
-                    ", D=" + std::to_string(tm_output.tm_mday) + ")";
-                break;
-            }
-            else {
-                std::cout << "  Result: Year " << year_to_test << " appears to be handled correctly." << std::endl;
-            }
-            }
-        std::cout << "-------------------------------------------------------------" << std::endl;
-        }
-
-    if (first_failed_year != -1) {
-        std::cout << "\nSUMMARY: First year mktime failed or produced incorrect results: "
-            << first_failed_year << std::endl;
-        std::cout << "Reason: " << failure_reason << std::endl;
-    }
-    else {
-        std::cout << "\nSUMMARY: mktime appeared to handle all years up to "
-            << end_year_search_limit << " correctly." << std::endl;
     }
 }
