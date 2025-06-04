@@ -72,7 +72,7 @@ class CDMDateTime {
 private:
     std::chrono::system_clock::time_point time_point_;
 
-    std::tm to_tm_local() const {
+    inline std::tm to_tm_local() const {
         std::time_t tt = std::chrono::system_clock::to_time_t(time_point_);
         std::tm local_tm{};
 #ifdef _WIN32
@@ -83,7 +83,7 @@ private:
         return local_tm;
     }
 
-    std::tm to_tm_utc() const {
+    inline std::tm to_tm_utc() const {
         std::time_t tt = std::chrono::system_clock::to_time_t(time_point_);
         std::tm utc_tm{};
 #ifdef _WIN32
@@ -96,7 +96,7 @@ private:
 
 public:
     // 原 init_from_components 函数，建议更名为 SetDateTime
-    void SetDateTime(int year, int month, int day, int hour, int minute, int second) {
+    inline void SetDateTime(int year, int month, int day, int hour, int minute, int second) {
         std::tm t{};
         t.tm_year = year - 1900;    // tm_year 是自1900年起的年数
         t.tm_mon = month - 1;       // tm_mon 是从0开始的月份 (0=一月, 11=十二月)
@@ -116,7 +116,7 @@ public:
     }
 
     // SetDate 函数应为 CDMDateTime 类的成员函数
-    void SetDate(int year, int month, int day) {
+    inline void SetDate(int year, int month, int day) {
         // 首先获取当前时间的小时、分钟和秒
         std::tm t_current = to_tm_local(); // to_tm_local() 是一个将 time_point_ 转换为本地 std::tm 结构的成员函数
 
@@ -125,7 +125,7 @@ public:
     }
 
     // SetTime 函数应为 CDMDateTime 类的成员函数
-    void SetTime(int hour, int minute, int second) {
+    inline void SetTime(int hour, int minute, int second) {
         // 首先获取当前时间的年、月、日
         std::tm t_current = to_tm_local(); // to_tm_local() 是一个将 time_point_ 转换为本地 std::tm 结构的成员函数
 
@@ -140,12 +140,12 @@ private:
 public:
     // static
 
-    static CDMDateTime Now() {
+    inline static CDMDateTime Now() {
         auto now_tp = std::chrono::system_clock::now();
         return CDMDateTime(std::chrono::time_point_cast<std::chrono::seconds>(now_tp));
     }
 
-    static CDMDateTime Parse(const std::string& dateTimeStr, const std::string& sscanf_format = FORMAT_STANDARD) {
+    inline static CDMDateTime Parse(const std::string& dateTimeStr, const std::string& sscanf_format = FORMAT_STANDARD) {
         int year = 0, month = 0, day = 0;
         int hour = 0, minute = 0, second = 0;
 
