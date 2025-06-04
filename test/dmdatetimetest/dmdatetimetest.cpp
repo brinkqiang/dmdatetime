@@ -410,7 +410,7 @@ TEST_F(CDMDateTimePracticalTest, 3000)
     std::cout << "-------------------------------------------------------------" << std::endl;
 
     int start_year = 2150;
-    int end_year_search_limit = 2600;
+    int end_year_search_limit = 3000;
 
     std::tm t_input = {};
     t_input.tm_mon = 0;
@@ -426,7 +426,7 @@ TEST_F(CDMDateTimePracticalTest, 3000)
     for (int year_to_test = start_year; year_to_test <= end_year_search_limit; ++year_to_test) {
         t_input.tm_year = year_to_test - 1900;
 
-        time_t tt_result = mktime(&t_input);
+        time_t tt_result = std::mktime(&t_input);
 
         std::cout << "Testing Year: " << year_to_test << " (tm_year=" << t_input.tm_year << ")" << std::endl;
         std::cout << "  mktime returned time_t: " << tt_result << std::endl;

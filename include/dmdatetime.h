@@ -106,7 +106,7 @@ public:
         t.tm_sec = second;          // tm_sec 是一分钟中的秒数 (0-59)
         t.tm_isdst = -1;            // 夏令时信息，-1表示让系统自动判断
 
-        std::time_t tt = mktime(&t); // 将 std::tm 结构转换为 time_t 类型
+        std::time_t tt = std::mktime(&t); // 将 std::tm 结构转换为 time_t 类型
         if (tt == (std::time_t)(-1)) {
             // 如果 mktime 无法规范化或表示给定的日期/时间组件，则抛出异常
             throw std::runtime_error("Invalid date/time components that mktime could not normalize or represent.");
