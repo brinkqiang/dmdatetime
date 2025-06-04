@@ -95,21 +95,43 @@ private:
     }
 
 public:
-    void init_from_components(int year, int month, int day, int hour, int minute, int second) {
+    // 原 init_from_components 函数，建议更名为 SetDateTime
+    void SetDateTime(int year, int month, int day, int hour, int minute, int second) {
         std::tm t{};
-        t.tm_year = year - 1900;
-        t.tm_mon = month - 1;
-        t.tm_mday = day;
-        t.tm_hour = hour;
-        t.tm_min = minute;
-        t.tm_sec = second;
-        t.tm_isdst = -1;
+        t.tm_year = year - 1900;    // tm_year 是自1900年起的年数
+        t.tm_mon = month - 1;       // tm_mon 是从0开始的月份 (0=一月, 11=十二月)
+        t.tm_mday = day;            // tm_mday 是一月中的日期 (1-31)
+        t.tm_hour = hour;           // tm_hour 是一天中的小时 (0-23)
+        t.tm_min = minute;          // tm_min 是一小时中的分钟 (0-59)
+        t.tm_sec = second;          // tm_sec 是一分钟中的秒数 (0-59)
+        t.tm_isdst = -1;            // 夏令时信息，-1表示让系统自动判断
 
-        std::time_t tt = mktime(&t);
+        std::time_t tt = mktime(&t); // 将 std::tm 结构转换为 time_t 类型
         if (tt == (std::time_t)(-1)) {
+            // 如果 mktime 无法规范化或表示给定的日期/时间组件，则抛出异常
             throw std::runtime_error("Invalid date/time components that mktime could not normalize or represent.");
         }
+        // time_point_ (类的成员变量) 被更新为新的时间点
         time_point_ = std::chrono::system_clock::from_time_t(tt);
+    }
+
+    // SetDate 函数应为 CDMDateTime 类的成员函数
+    void SetDate(int year, int month, int day) {
+        // 首先获取当前时间的小时、分钟和秒
+        std::tm t_current = to_tm_local(); // to_tm_local() 是一个将 time_point_ 转换为本地 std::tm 结构的成员函数
+
+        // 使用新的日期和当前的时间调用 SetDateTime
+        SetDateTime(year, month, day, t_current.tm_hour, t_current.tm_min, t_current.tm_sec);
+    }
+
+    // SetTime 函数应为 CDMDateTime 类的成员函数
+    void SetTime(int hour, int minute, int second) {
+        // 首先获取当前时间的年、月、日
+        std::tm t_current = to_tm_local(); // to_tm_local() 是一个将 time_point_ 转换为本地 std::tm 结构的成员函数
+
+        // 使用新的时间和当前的日期调用 SetDateTime
+        // 注意：t_current.tm_year 是自1900年起的年数, t_current.tm_mon 是0-11的月份
+        SetDateTime(t_current.tm_year + 1900, t_current.tm_mon + 1, t_current.tm_mday, hour, minute, second);
     }
 private:
 
@@ -163,12 +185,12 @@ public:
         if (day == 0 && fields_scanned >= 3) day = 1;
 
         CDMDateTime resultDt;
-        resultDt.init_from_components(year, month, day, hour, minute, second);
+        resultDt.SetDateTime(year, month, day, hour, minute, second);
         return resultDt;
     }
 
     CDMDateTime(int year, int month, int day, int hour = 0, int minute = 0, int second = 0) {
-        init_from_components(year, month, day, hour, minute, second);
+        SetDateTime(year, month, day, hour, minute, second);
     }
 
     static CDMDateTime FromTimestamp(time_t timestamp) {
