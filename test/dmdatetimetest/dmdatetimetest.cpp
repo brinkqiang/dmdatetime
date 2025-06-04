@@ -222,6 +222,9 @@ TEST_F(CDMDateTimeUsageTest, StaticUtilityMethods) {
 
     CDMDateTime minValue = CDMDateTime::MinValue();
     CDMDateTime maxValue = CDMDateTime::MaxValue();
+
+    fmt::print("{}\n", minValue.ToString());
+    fmt::print("{}\n", maxValue.ToString());
     EXPECT_TRUE(minValue < dt_ref);
     EXPECT_TRUE(maxValue > dt_ref);
     EXPECT_TRUE(minValue < maxValue);
