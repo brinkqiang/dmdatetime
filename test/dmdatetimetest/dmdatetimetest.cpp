@@ -325,16 +325,16 @@ TEST_F(CDMDateTimeUsageTest, FormatConstants) {
     // These tests assume what the constants expand to.
     // If the actual format strings for these constants are known, use them.
     // Default ToString() is already tested as "yyyy-MM-dd HH:mm:ss"
-    EXPECT_EQ(dt_ref.ToString(), dt_ref.ToString("%Y-%m-%d %H:%M:%S"));
+    EXPECT_EQ(dt_ref.ToString(), dt_ref.ToString(CDMDateTime::TO_STRING_STANDARD));
 
     // Assuming FORMAT_SHORT_DATE is "yyyy-MM-dd"
-    EXPECT_EQ("2024-12-25", dt_ref.ToString("%Y-%m-%d"));
+    EXPECT_EQ("2024-12-25", dt_ref.ToString(CDMDateTime::TO_STRING_SHORT_DATE));
 
     // Assuming FORMAT_LONG_DATE is "yyyy年MM月dd日" (or similar based on locale/lib)
     // This is a guess. If different, this will fail.
     // From example: dt1.ToString("yyyy年MM月dd日 HH:mm:ss")
     // Let's assume FORMAT_LONG_DATE doesn't include time.
-    std::string long_date_str = dt_ref.ToString("%Y-%m-%d %H:%M:%S");
+    std::string long_date_str = dt_ref.ToString(CDMDateTime::TO_STRING_STANDARD);
     EXPECT_NE(std::string::npos, long_date_str.find(std::to_string(dt_ref.GetYear())));
     EXPECT_NE(std::string::npos, long_date_str.find(std::to_string(dt_ref.GetMonth())));
     EXPECT_NE(std::string::npos, long_date_str.find(std::to_string(dt_ref.GetDay())));

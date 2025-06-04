@@ -143,6 +143,13 @@ public:
     static const char* FORMAT_STANDARD_MS_CN;
     static const char* FORMAT_SHORT_DATE_CN;
 
+    static const char* TO_STRING_STANDARD;
+    static const char* TO_STRING_STANDARD_MS;
+    static const char* TO_STRING_SHORT_DATE;
+    static const char* TO_STRING_STANDARD_CN;
+    static const char* TO_STRING_STANDARD_MS_CN;
+    static const char* TO_STRING_SHORT_DATE_CN;
+
     CDMDateTime() : time_point_(std::chrono::system_clock::now()) {}
 
     static CDMDateTime Now() {
@@ -392,4 +399,14 @@ const char* CDMDateTime::FORMAT_SHORT_DATE = "%d-%d-%d";
 const char* CDMDateTime::FORMAT_STANDARD_CN = "%d年%d月%d日 %d时%d分%d秒";
 const char* CDMDateTime::FORMAT_STANDARD_MS_CN = "%d年%d月%d日 %d时%d分%d秒.%d";
 const char* CDMDateTime::FORMAT_SHORT_DATE_CN = "%d年%d月%d日";
+
+const char* CDMDateTime::TO_STRING_STANDARD = "%Y-%m-%d %H:%M:%S";
+const char* CDMDateTime::TO_STRING_STANDARD_MS = "%Y-%m-%d %H:%M:%S.%f";
+const char* CDMDateTime::TO_STRING_SHORT_DATE = "%Y-%m-%d";
+
+const char* CDMDateTime::TO_STRING_STANDARD_CN = "%Y年%m月%d日 %H时%M分%S秒";
+const char* CDMDateTime::TO_STRING_STANDARD_MS_CN = "%Y年%m月%d日 %H时%M分%S秒.%f";
+const char* CDMDateTime::TO_STRING_SHORT_DATE_CN = "%Y年%m月%d日";
+
+
 #endif // DMDATETIME_H_
