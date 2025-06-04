@@ -324,84 +324,84 @@
 class CDMDateTimePracticalTest : public ::testing::Test {
 };
 
-//TEST_F(CDMDateTimePracticalTest, LogFileNameGeneration) {
-//    CDMDateTime fixed_now(2024, 7, 15, 10, 30, 0);
-//    std::string logFileName = "log_" + fixed_now.ToString("%04d_%02d_%02d_%02d_%02d_%02d") + ".txt";
-//    EXPECT_EQ("log_2024_07_15_10_30_00.txt", logFileName);
-//}
-//
-//TEST_F(CDMDateTimePracticalTest, CalculateAge) {
-//    CDMDateTime birthday(1990, 5, 15);
-//    CDMDateTime current_fixed_date(2024, 6, 4); // Fixed date for test consistency
-//
-//    CDMTimeSpan age_span = current_fixed_date.Subtract(birthday);
-//    int years_calculated_approx = static_cast<int>(age_span.GetTotalDays() / 365.25); // Approximate age
-//    EXPECT_EQ(34, years_calculated_approx);
-//
-//    // More precise age calculation
-//    int precise_years = current_fixed_date.GetYear() - birthday.GetYear();
-//    if (current_fixed_date.GetMonth() < birthday.GetMonth() ||
-//        (current_fixed_date.GetMonth() == birthday.GetMonth() && current_fixed_date.GetDay() < birthday.GetDay())) {
-//        precise_years--;
-//    }
-//    EXPECT_EQ(precise_years, years_calculated_approx); // Check if approximation matches precise for this case
-//
-//    CDMDateTime birthday_edge(2000, 1, 1);
-//    CDMDateTime current_edge(2023, 12, 31);
-//    CDMTimeSpan age_span_edge = current_edge.Subtract(birthday_edge);
-//    int precise_years_edge = current_edge.GetYear() - birthday_edge.GetYear();
-//    if (current_edge.GetMonth() < birthday_edge.GetMonth() ||
-//        (current_edge.GetMonth() == birthday_edge.GetMonth() && current_edge.GetDay() < birthday_edge.GetDay())) {
-//        precise_years_edge--;
-//    }
-//    EXPECT_EQ(precise_years_edge, static_cast<int>(age_span_edge.GetTotalDays() / 365.25)); // For this case, 23 years
-//    EXPECT_EQ(23, precise_years_edge);
-//}
-//
-//TEST_F(CDMDateTimePracticalTest, CalculateWorkdays) {
-//    CDMDateTime startDate = CDMDateTime::Parse("2024-01-01"); // Monday
-//    CDMDateTime endDate = CDMDateTime::Parse("2024-01-07");   // Sunday
-//    int workdays = 0;
-//    for (CDMDateTime date = startDate; date <= endDate; date = date.AddDays(1)) {
-//        if (date.IsWeekday()) {
-//            workdays++;
-//        }
-//    }
-//    EXPECT_EQ(5, workdays); // Mon, Tue, Wed, Thu, Fri
-//
-//    CDMDateTime startDate2 = CDMDateTime::Parse("2024-12-23"); // Monday
-//    CDMDateTime endDate2 = CDMDateTime::Parse("2024-12-29");   // Sunday
-//    int workdays2 = 0;
-//    for (CDMDateTime date = startDate2; date <= endDate2; date = date.AddDays(1)) {
-//        if (date.IsWeekday()) {
-//            workdays2++;
-//        }
-//    }
-//    EXPECT_EQ(5, workdays2); // Mon, Tue, Wed, Thu, Fri
-//}
-//
-//TEST_F(CDMDateTimePracticalTest, OperationTimeCalculation) {
-//    CDMDateTime startTime(2024, 1, 1, 10, 0, 0);
-//    CDMDateTime endTime(2024, 1, 1, 10, 0, 1);
-//
-//    CDMTimeSpan elapsed = endTime.Subtract(startTime);
-//    auto totalSeconds = elapsed.GetTotalSeconds();
-//    EXPECT_DOUBLE_EQ(1, totalSeconds);
-//
-//    CDMDateTime startTime2(2024, 1, 1, 10, 0, 0);
-//    CDMDateTime endTime2(2024, 1, 1, 10, 1, 30); // 1 minute 30 seconds
-//    CDMTimeSpan elapsed2 = endTime2.Subtract(startTime2);
-//    EXPECT_DOUBLE_EQ(90, elapsed2.GetTotalSeconds()); // 60 + 30 = 90 seconds
-//}
-//
-//TEST_F(CDMDateTimePracticalTest, Subtract) {
-//    CDMDateTime startTime(2024, 1, 1, 10, 0, 0);
-//    CDMDateTime endTime(2024, 1, 1, 11, 30, 1);
-//
-//    EXPECT_EQ(5401, endTime.Subtract(startTime).GetTotalSeconds());
-//    EXPECT_EQ(90, endTime.Subtract(startTime).GetTotalMinutes());
-//    EXPECT_EQ(1, endTime.Subtract(startTime).GetTotalHours());
-//}
+TEST_F(CDMDateTimePracticalTest, LogFileNameGeneration) {
+    CDMDateTime fixed_now(2024, 7, 15, 10, 30, 0);
+    std::string logFileName = "log_" + fixed_now.ToString("%04d_%02d_%02d_%02d_%02d_%02d") + ".txt";
+    EXPECT_EQ("log_2024_07_15_10_30_00.txt", logFileName);
+}
+
+TEST_F(CDMDateTimePracticalTest, CalculateAge) {
+    CDMDateTime birthday(1990, 5, 15);
+    CDMDateTime current_fixed_date(2024, 6, 4); // Fixed date for test consistency
+
+    CDMTimeSpan age_span = current_fixed_date.Subtract(birthday);
+    int years_calculated_approx = static_cast<int>(age_span.GetTotalDays() / 365.25); // Approximate age
+    EXPECT_EQ(34, years_calculated_approx);
+
+    // More precise age calculation
+    int precise_years = current_fixed_date.GetYear() - birthday.GetYear();
+    if (current_fixed_date.GetMonth() < birthday.GetMonth() ||
+        (current_fixed_date.GetMonth() == birthday.GetMonth() && current_fixed_date.GetDay() < birthday.GetDay())) {
+        precise_years--;
+    }
+    EXPECT_EQ(precise_years, years_calculated_approx); // Check if approximation matches precise for this case
+
+    CDMDateTime birthday_edge(2000, 1, 1);
+    CDMDateTime current_edge(2023, 12, 31);
+    CDMTimeSpan age_span_edge = current_edge.Subtract(birthday_edge);
+    int precise_years_edge = current_edge.GetYear() - birthday_edge.GetYear();
+    if (current_edge.GetMonth() < birthday_edge.GetMonth() ||
+        (current_edge.GetMonth() == birthday_edge.GetMonth() && current_edge.GetDay() < birthday_edge.GetDay())) {
+        precise_years_edge--;
+    }
+    EXPECT_EQ(precise_years_edge, static_cast<int>(age_span_edge.GetTotalDays() / 365.25)); // For this case, 23 years
+    EXPECT_EQ(23, precise_years_edge);
+}
+
+TEST_F(CDMDateTimePracticalTest, CalculateWorkdays) {
+    CDMDateTime startDate = CDMDateTime::Parse("2024-01-01"); // Monday
+    CDMDateTime endDate = CDMDateTime::Parse("2024-01-07");   // Sunday
+    int workdays = 0;
+    for (CDMDateTime date = startDate; date <= endDate; date = date.AddDays(1)) {
+        if (date.IsWeekday()) {
+            workdays++;
+        }
+    }
+    EXPECT_EQ(5, workdays); // Mon, Tue, Wed, Thu, Fri
+
+    CDMDateTime startDate2 = CDMDateTime::Parse("2024-12-23"); // Monday
+    CDMDateTime endDate2 = CDMDateTime::Parse("2024-12-29");   // Sunday
+    int workdays2 = 0;
+    for (CDMDateTime date = startDate2; date <= endDate2; date = date.AddDays(1)) {
+        if (date.IsWeekday()) {
+            workdays2++;
+        }
+    }
+    EXPECT_EQ(5, workdays2); // Mon, Tue, Wed, Thu, Fri
+}
+
+TEST_F(CDMDateTimePracticalTest, OperationTimeCalculation) {
+    CDMDateTime startTime(2024, 1, 1, 10, 0, 0);
+    CDMDateTime endTime(2024, 1, 1, 10, 0, 1);
+
+    CDMTimeSpan elapsed = endTime.Subtract(startTime);
+    auto totalSeconds = elapsed.GetTotalSeconds();
+    EXPECT_DOUBLE_EQ(1, totalSeconds);
+
+    CDMDateTime startTime2(2024, 1, 1, 10, 0, 0);
+    CDMDateTime endTime2(2024, 1, 1, 10, 1, 30); // 1 minute 30 seconds
+    CDMTimeSpan elapsed2 = endTime2.Subtract(startTime2);
+    EXPECT_DOUBLE_EQ(90, elapsed2.GetTotalSeconds()); // 60 + 30 = 90 seconds
+}
+
+TEST_F(CDMDateTimePracticalTest, Subtract) {
+    CDMDateTime startTime(2024, 1, 1, 10, 0, 0);
+    CDMDateTime endTime(2024, 1, 1, 11, 30, 1);
+
+    EXPECT_EQ(5401, endTime.Subtract(startTime).GetTotalSeconds());
+    EXPECT_EQ(90, endTime.Subtract(startTime).GetTotalMinutes());
+    EXPECT_EQ(1, endTime.Subtract(startTime).GetTotalHours());
+}
 
 TEST_F(CDMDateTimePracticalTest, 3000)
 {
