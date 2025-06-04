@@ -171,22 +171,6 @@ TEST_F(CDMDateTimeUsageTest, SpecialDateOperations) {
     EXPECT_EQ(0, startOfYear.GetHour());
 }
 
-TEST_F(CDMDateTimeUsageTest, TimeZoneOperations) {
-    // ToUTC, ToLocal, and ToTimeZone are no-ops (return *this) in the current dmdatetime.h.
-    // These tests verify that behavior.
-    CDMDateTime original = dt_ref;
-
-    CDMDateTime as_utc = original.ToUTC();
-    EXPECT_EQ(original, as_utc);
-
-    CDMDateTime as_local = original.ToLocal();
-    EXPECT_EQ(original, as_local);
-
-    CDMDateTime specific_tz = original.ToTimeZone(8);
-    EXPECT_EQ(original, specific_tz);
-    EXPECT_NO_THROW(original.ToTimeZone(8));
-    EXPECT_NO_THROW(original.ToTimeZone(-5));
-}
 
 TEST_F(CDMDateTimeUsageTest, ValidationAndUtilityFunctions) {
     EXPECT_TRUE(dt_ref.IsLeapYear()); // 2024 is a leap year
@@ -416,6 +400,4 @@ TEST_F(CDMDateTimePracticalTest, Subtract) {
     fmt::print("{}\n", endTime.Subtract(startTime).GetTotalSeconds());
     fmt::print("{}\n", endTime.Subtract(startTime).GetTotalMinutes());
     fmt::print("{}\n", endTime.Subtract(startTime).GetTotalHours());
-
-
 }

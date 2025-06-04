@@ -145,21 +145,8 @@ private:
             start_pos += to.length();
         }
     }
-
 public:
-    static const char* FORMAT_STANDARD;
-    static const char* FORMAT_SHORT_DATE;
-    static const char* FORMAT_STANDARD_CN;
-    static const char* FORMAT_SHORT_DATE_CN;
-
-    static const char* TO_STRING_STANDARD;
-    static const char* TO_STRING_SHORT_DATE;
-    static const char* TO_STRING_STANDARD_CN;
-    static const char* TO_STRING_SHORT_DATE_CN;
-
-    CDMDateTime() : time_point_(std::chrono::system_clock::now()) {
-        time_point_ = std::chrono::time_point_cast<std::chrono::seconds>(time_point_);
-    }
+    // static
 
     static CDMDateTime Now() {
         auto now_tp = std::chrono::system_clock::now();
@@ -188,6 +175,21 @@ public:
         resultDt.SetDateTime(year, month, day, hour, minute, second);
         return resultDt;
     }
+public:
+    static const char* FORMAT_STANDARD;
+    static const char* FORMAT_SHORT_DATE;
+    static const char* FORMAT_STANDARD_CN;
+    static const char* FORMAT_SHORT_DATE_CN;
+
+    static const char* TO_STRING_STANDARD;
+    static const char* TO_STRING_SHORT_DATE;
+    static const char* TO_STRING_STANDARD_CN;
+    static const char* TO_STRING_SHORT_DATE_CN;
+
+    CDMDateTime() : time_point_(std::chrono::system_clock::now()) {
+        time_point_ = std::chrono::time_point_cast<std::chrono::seconds>(time_point_);
+    }
+
 
     CDMDateTime(int year, int month, int day, int hour = 0, int minute = 0, int second = 0) {
         SetDateTime(year, month, day, hour, minute, second);
@@ -283,6 +285,7 @@ public:
     bool operator==(const CDMDateTime& other) const { return time_point_ == other.time_point_; }
     bool operator!=(const CDMDateTime& other) const { return time_point_ != other.time_point_; }
 
+
     CDMDateTime GetStartOfDay() const {
         std::tm t = to_tm_local();
         return CDMDateTime(t.tm_year + 1900, t.tm_mon + 1, t.tm_mday, 0, 0, 0);
@@ -311,10 +314,6 @@ public:
         std::tm t = to_tm_local();
         return CDMDateTime(t.tm_year + 1900, 1, 1, 0, 0, 0);
     }
-
-    CDMDateTime ToUTC() const { return *this; }
-    CDMDateTime ToLocal() const { return *this; }
-    CDMDateTime ToTimeZone(int /* utc_offset_hours */) const { return *this; }
 
     bool IsLeapYear() const {
         int y = GetYear();
