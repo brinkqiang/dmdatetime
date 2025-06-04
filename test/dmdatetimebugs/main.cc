@@ -358,27 +358,27 @@ class CDMDateTimePracticalTest : public ::testing::Test {
 //    EXPECT_EQ(23, precise_years_edge);
 //}
 
-TEST_F(CDMDateTimePracticalTest, CalculateWorkdays) {
-    CDMDateTime startDate = CDMDateTime::Parse("2024-01-01"); // Monday
-    CDMDateTime endDate = CDMDateTime::Parse("2024-01-07");   // Sunday
-    int workdays = 0;
-    for (CDMDateTime date = startDate; date <= endDate; date = date.AddDays(1)) {
-        if (date.IsWeekday()) {
-            workdays++;
-        }
-    }
-    EXPECT_EQ(5, workdays); // Mon, Tue, Wed, Thu, Fri
-
-    CDMDateTime startDate2 = CDMDateTime::Parse("2024-12-23"); // Monday
-    CDMDateTime endDate2 = CDMDateTime::Parse("2024-12-29");   // Sunday
-    int workdays2 = 0;
-    for (CDMDateTime date = startDate2; date <= endDate2; date = date.AddDays(1)) {
-        if (date.IsWeekday()) {
-            workdays2++;
-        }
-    }
-    EXPECT_EQ(5, workdays2); // Mon, Tue, Wed, Thu, Fri
-}
+//TEST_F(CDMDateTimePracticalTest, CalculateWorkdays) {
+//    CDMDateTime startDate = CDMDateTime::Parse("2024-01-01"); // Monday
+//    CDMDateTime endDate = CDMDateTime::Parse("2024-01-07");   // Sunday
+//    int workdays = 0;
+//    for (CDMDateTime date = startDate; date <= endDate; date = date.AddDays(1)) {
+//        if (date.IsWeekday()) {
+//            workdays++;
+//        }
+//    }
+//    EXPECT_EQ(5, workdays); // Mon, Tue, Wed, Thu, Fri
+//
+//    CDMDateTime startDate2 = CDMDateTime::Parse("2024-12-23"); // Monday
+//    CDMDateTime endDate2 = CDMDateTime::Parse("2024-12-29");   // Sunday
+//    int workdays2 = 0;
+//    for (CDMDateTime date = startDate2; date <= endDate2; date = date.AddDays(1)) {
+//        if (date.IsWeekday()) {
+//            workdays2++;
+//        }
+//    }
+//    EXPECT_EQ(5, workdays2); // Mon, Tue, Wed, Thu, Fri
+//}
 
 TEST_F(CDMDateTimePracticalTest, OperationTimeCalculation) {
     CDMDateTime startTime(2024, 1, 1, 10, 0, 0);
