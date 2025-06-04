@@ -52,7 +52,7 @@ CDMDateTime startOfDay = now.GetStartOfDay();
 ### Time Span Calculations
 ```cpp
 CDMTimeSpan duration = tomorrow.Subtract(now);
-long long hours = duration.GetTotalHours();
+time_t hours = duration.GetTotalHours();
 ```
 
 ### Parsing
