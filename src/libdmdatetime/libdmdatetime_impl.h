@@ -25,7 +25,7 @@
 #include "dmdatetime.h"
 #include <chrono>
 
-class CDMDateTimeImpl : public IDMDateTime
+class CDMDateTime : public IDMDateTime
 {
 private:
     std::chrono::system_clock::time_point m_timePoint;
@@ -41,15 +41,15 @@ private:
     bool ParseFromString(const std::string& str, DMDateTimeFormat format);
     
 public:
-    CDMDateTimeImpl();
-    virtual ~CDMDateTimeImpl() {}
+    CDMDateTime();
+    virtual ~CDMDateTime() {}
     
     virtual void DMAPI Release(void) override;
     
     // 基础设置和获取
-    virtual void DMAPI SetDateTime(int year, int month, int day, int hour = 0, int minute = 0, int second = 0) override;
+    virtual bool DMAPI SetDateTime(int year, int month, int day, int hour = 0, int minute = 0, int second = 0) override;
     virtual void DMAPI SetFromTimestamp(time_t timestamp) override;
-    virtual void DMAPI SetFromString(const std::string& dateTimeStr, DMDateTimeFormat format = DM_DATETIME_FORMAT_YYYYMMDD_HHMMSS) override;
+    virtual bool DMAPI SetFromString(const std::string& dateTimeStr, DMDateTimeFormat format = DM_DATETIME_FORMAT_YYYYMMDD_HHMMSS) override;
     virtual void DMAPI SetToNow() override;
     
     // 获取时间信息

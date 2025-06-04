@@ -24,16 +24,16 @@
 #include <iomanip>
 #include <cstring>
 
-CDMDateTimeImpl::CDMDateTimeImpl() 
+CDMDateTime::CDMDateTime() 
     : m_timezoneOffset(0), m_isValid(false) {
     SetToNow();
 }
 
-void CDMDateTimeImpl::Release(void) {
+void CDMDateTime::Release(void) {
     delete this;
 }
 
-std::tm CDMDateTimeImpl::GetLocalTm() const {
+std::tm CDMDateTime::GetLocalTm() const {
     auto time_t_val = std::chrono::system_clock::to_time_t(m_timePoint);
     std::tm tm_val;
 #ifdef _WIN32
@@ -44,7 +44,7 @@ std::tm CDMDateTimeImpl::GetLocalTm() const {
     return tm_val;
 }
 
-void CDMDateTimeImpl::SetFromTm(const std::tm& tm) {
+void CDMDateTime::SetFromTm(const std::tm& tm) {
     auto time_t_val = std::mktime(const_cast<std::tm*>(&tm));
     if (time_t_val != -1) {
         m_timePoint = std::chrono::system_clock::from_time_t(time_t_val);
@@ -54,7 +54,7 @@ void CDMDateTimeImpl::SetFromTm(const std::tm& tm) {
     }
 }
 
-bool CDMDateTimeImpl::IsValidDate(int year, int month, int day) const {
+bool CDMDateTime::IsValidDate(int year, int month, int day) const {
     if (year < 1900 || year > 9999) return false;
     if (month < 1 || month > 12) return false;
     if (day < 1) return false;
@@ -63,16 +63,16 @@ bool CDMDateTimeImpl::IsValidDate(int year, int month, int day) const {
     return day <= daysInMonth;
 }
 
-bool CDMDateTimeImpl::IsValidTime(int hour, int minute, int second) const {
+bool CDMDateTime::IsValidTime(int hour, int minute, int second) const {
     return hour >= 0 && hour < 24 && 
            minute >= 0 && minute < 60 && 
            second >= 0 && second < 60;
 }
 
-void CDMDateTimeImpl::SetDateTime(int year, int month, int day, int hour, int minute, int second) {
+bool CDMDateTime::SetDateTime(int year, int month, int day, int hour, int minute, int second) {
     if (!IsValidDate(year, month, day) || !IsValidTime(hour, minute, second)) {
         m_isValid = false;
-        return;
+        return false;
     }
     
     std::tm tm_val = {};
@@ -85,23 +85,27 @@ void CDMDateTimeImpl::SetDateTime(int year, int month, int day, int hour, int mi
     tm_val.tm_isdst = -1;
     
     SetFromTm(tm_val);
+
+    return true;
 }
 
-void CDMDateTimeImpl::SetFromTimestamp(time_t timestamp) {
+void CDMDateTime::SetFromTimestamp(time_t timestamp) {
     m_timePoint = std::chrono::system_clock::from_time_t(timestamp);
     m_isValid = true;
 }
 
-void CDMDateTimeImpl::SetFromString(const std::string& dateTimeStr, DMDateTimeFormat format) {
+bool CDMDateTime::SetFromString(const std::string& dateTimeStr, DMDateTimeFormat format) {
     m_isValid = ParseFromString(dateTimeStr, format);
+
+    return m_isValid;
 }
 
-void CDMDateTimeImpl::SetToNow() {
+void CDMDateTime::SetToNow() {
     m_timePoint = std::chrono::system_clock::now();
     m_isValid = true;
 }
 
-bool CDMDateTimeImpl::ParseFromString(const std::string& str, DMDateTimeFormat format) {
+bool CDMDateTime::ParseFromString(const std::string& str, DMDateTimeFormat format) {
     std::tm tm_val = {};
     
     switch (format) {
@@ -159,60 +163,60 @@ bool CDMDateTimeImpl::ParseFromString(const std::string& str, DMDateTimeFormat f
     return false;
 }
 
-int CDMDateTimeImpl::GetYear() const {
+int CDMDateTime::GetYear() const {
     if (!m_isValid) return 0;
     auto tm_val = GetLocalTm();
     return tm_val.tm_year + 1900;
 }
 
-int CDMDateTimeImpl::GetMonth() const {
+int CDMDateTime::GetMonth() const {
     if (!m_isValid) return 0;
     auto tm_val = GetLocalTm();
     return tm_val.tm_mon + 1;
 }
 
-int CDMDateTimeImpl::GetDay() const {
+int CDMDateTime::GetDay() const {
     if (!m_isValid) return 0;
     auto tm_val = GetLocalTm();
     return tm_val.tm_mday;
 }
 
-int CDMDateTimeImpl::GetHour() const {
+int CDMDateTime::GetHour() const {
     if (!m_isValid) return 0;
     auto tm_val = GetLocalTm();
     return tm_val.tm_hour;
 }
 
-int CDMDateTimeImpl::GetMinute() const {
+int CDMDateTime::GetMinute() const {
     if (!m_isValid) return 0;
     auto tm_val = GetLocalTm();
     return tm_val.tm_min;
 }
 
-int CDMDateTimeImpl::GetSecond() const {
+int CDMDateTime::GetSecond() const {
     if (!m_isValid) return 0;
     auto tm_val = GetLocalTm();
     return tm_val.tm_sec;
 }
 
-int CDMDateTimeImpl::GetWeekDay() const {
+int CDMDateTime::GetWeekDay() const {
     if (!m_isValid) return 0;
     auto tm_val = GetLocalTm();
     return tm_val.tm_wday;
 }
 
-int CDMDateTimeImpl::GetYearDay() const {
+int CDMDateTime::GetYearDay() const {
     if (!m_isValid) return 0;
     auto tm_val = GetLocalTm();
     return tm_val.tm_yday + 1;
 }
 
-time_t CDMDateTimeImpl::GetTimestamp() const {
+time_t CDMDateTime::GetTimestamp() const {
     if (!m_isValid) return 0;
     return std::chrono::system_clock::to_time_t(m_timePoint);
 }
 
-std::string CDMDateTimeImpl::ToString(DMDateTimeFormat format) const {
+std::string CDMDateTime::ToString(DMDateTimeFormat format) const {
     if (!m_isValid) return "";
     
     auto tm_val = GetLocalTm();
@@ -271,7 +275,7 @@ std::string CDMDateTimeImpl::ToString(DMDateTimeFormat format) const {
     return oss.str();
 }
 
-void CDMDateTimeImpl::AddTime(int value, DMTimeUnit unit) {
+void CDMDateTime::AddTime(int value, DMTimeUnit unit) {
     if (!m_isValid) return;
     
     switch (unit) {
@@ -313,11 +317,11 @@ void CDMDateTimeImpl::AddTime(int value, DMTimeUnit unit) {
     }
 }
 
-void CDMDateTimeImpl::SubTime(int value, DMTimeUnit unit) {
+void CDMDateTime::SubTime(int value, DMTimeUnit unit) {
     AddTime(-value, unit);
 }
 
-long long CDMDateTimeImpl::DiffTime(const IDMDateTime* other, DMTimeUnit unit) const {
+long long CDMDateTime::DiffTime(const IDMDateTime* other, DMTimeUnit unit) const {
     if (!m_isValid || !other || !other->IsValid()) return 0;
     
     auto otherTimestamp = other->GetTimestamp();
@@ -346,50 +350,50 @@ long long CDMDateTimeImpl::DiffTime(const IDMDateTime* other, DMTimeUnit unit) c
     return 0;
 }
 
-bool CDMDateTimeImpl::IsEqual(const IDMDateTime* other) const {
+bool CDMDateTime::IsEqual(const IDMDateTime* other) const {
     if (!other) return false;
     return GetTimestamp() == other->GetTimestamp();
 }
 
-bool CDMDateTimeImpl::IsLess(const IDMDateTime* other) const {
+bool CDMDateTime::IsLess(const IDMDateTime* other) const {
     if (!other) return false;
     return GetTimestamp() < other->GetTimestamp();
 }
 
-bool CDMDateTimeImpl::IsGreater(const IDMDateTime* other) const {
+bool CDMDateTime::IsGreater(const IDMDateTime* other) const {
     if (!other) return false;
     return GetTimestamp() > other->GetTimestamp();
 }
 
-bool CDMDateTimeImpl::IsLessOrEqual(const IDMDateTime* other) const {
+bool CDMDateTime::IsLessOrEqual(const IDMDateTime* other) const {
     if (!other) return false;
     return GetTimestamp() <= other->GetTimestamp();
 }
 
-bool CDMDateTimeImpl::IsGreaterOrEqual(const IDMDateTime* other) const {
+bool CDMDateTime::IsGreaterOrEqual(const IDMDateTime* other) const {
     if (!other) return false;
     return GetTimestamp() >= other->GetTimestamp();
 }
 
-bool CDMDateTimeImpl::IsValid() const {
+bool CDMDateTime::IsValid() const {
     return m_isValid;
 }
 
-bool CDMDateTimeImpl::IsLeapYear() const {
+bool CDMDateTime::IsLeapYear() const {
     if (!m_isValid) return false;
     return IsLeapYear(GetYear());
 }
 
-bool CDMDateTimeImpl::IsLeapYear(int year) const {
+bool CDMDateTime::IsLeapYear(int year) const {
     return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 }
 
-int CDMDateTimeImpl::GetDaysInMonth() const {
+int CDMDateTime::GetDaysInMonth() const {
     if (!m_isValid) return 0;
     return GetDaysInMonth(GetYear(), GetMonth());
 }
 
-int CDMDateTimeImpl::GetDaysInMonth(int year, int month) const {
+int CDMDateTime::GetDaysInMonth(int year, int month) const {
     static const int daysInMonth[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
     
     if (month < 1 || month > 12) return 0;
@@ -402,26 +406,26 @@ int CDMDateTimeImpl::GetDaysInMonth(int year, int month) const {
     return days;
 }
 
-void CDMDateTimeImpl::SetTimeZoneOffset(int offsetMinutes) {
+void CDMDateTime::SetTimeZoneOffset(int offsetMinutes) {
     m_timezoneOffset = offsetMinutes;
 }
 
-int CDMDateTimeImpl::GetTimeZoneOffset() const {
+int CDMDateTime::GetTimeZoneOffset() const {
     return m_timezoneOffset;
 }
 
-void CDMDateTimeImpl::ConvertToUTC() {
+void CDMDateTime::ConvertToUTC() {
     if (!m_isValid) return;
     m_timePoint -= std::chrono::minutes(m_timezoneOffset);
 }
 
-void CDMDateTimeImpl::ConvertFromUTC() {
+void CDMDateTime::ConvertFromUTC() {
     if (!m_isValid) return;
     m_timePoint += std::chrono::minutes(m_timezoneOffset);
 }
 
-IDMDateTime* CDMDateTimeImpl::Clone() const {
-    CDMDateTimeImpl* clone = new CDMDateTimeImpl();
+IDMDateTime* CDMDateTime::Clone() const {
+    CDMDateTime* clone = new CDMDateTime();
     clone->m_timePoint = m_timePoint;
     clone->m_timezoneOffset = m_timezoneOffset;
     clone->m_isValid = m_isValid;
@@ -430,11 +434,11 @@ IDMDateTime* CDMDateTimeImpl::Clone() const {
 
 // 导出函数实现
 extern "C" DMEXPORT_DLL IDMDateTime* DMAPI dmdatetimeGetModule() {
-    return new CDMDateTimeImpl();
+    return new CDMDateTime();
 }
 
 extern "C" DMEXPORT_DLL IDMDateTime* DMAPI dmdatetimeCreateFromTimestamp(time_t timestamp) {
-    CDMDateTimeImpl* datetime = new CDMDateTimeImpl();
+    CDMDateTime* datetime = new CDMDateTime();
     datetime->SetFromTimestamp(timestamp);
     return datetime;
 }
@@ -442,7 +446,7 @@ extern "C" DMEXPORT_DLL IDMDateTime* DMAPI dmdatetimeCreateFromTimestamp(time_t 
 extern "C" DMEXPORT_DLL IDMDateTime* DMAPI dmdatetimeCreateFromString(const char* dateTimeStr, DMDateTimeFormat format) {
     if (!dateTimeStr) return nullptr;
     
-    CDMDateTimeImpl* datetime = new CDMDateTimeImpl();
+    CDMDateTime* datetime = new CDMDateTime();
     datetime->SetFromString(std::string(dateTimeStr), format);
     
     if (!datetime->IsValid()) {
@@ -454,7 +458,7 @@ extern "C" DMEXPORT_DLL IDMDateTime* DMAPI dmdatetimeCreateFromString(const char
 }
 
 extern "C" DMEXPORT_DLL IDMDateTime* DMAPI dmdatetimeCreateNow() {
-    CDMDateTimeImpl* datetime = new CDMDateTimeImpl();
+    CDMDateTime* datetime = new CDMDateTime();
     datetime->SetToNow();
     return datetime;
 }

@@ -19,9 +19,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef __CDMDATETIME_H_INCLUDE__
-#define __CDMDATETIME_H_INCLUDE__
-#include "dmos.h" // dmos.h已经处理平台头文件, 以及相关宏定义
+#ifndef __DMDATETIME_H_INCLUDE__
+#define __DMDATETIME_H_INCLUDE__
+#include "dmos.h"
 #include <string>
 #include <ctime>
 
@@ -51,9 +51,9 @@ public:
     virtual void DMAPI Release(void) = 0;
     
     // 基础设置和获取
-    virtual void DMAPI SetDateTime(int year, int month, int day, int hour = 0, int minute = 0, int second = 0) = 0;
+    virtual bool DMAPI SetDateTime(int year, int month, int day, int hour = 0, int minute = 0, int second = 0) = 0;
     virtual void DMAPI SetFromTimestamp(time_t timestamp) = 0;
-    virtual void DMAPI SetFromString(const std::string& dateTimeStr, DMDateTimeFormat format = DM_DATETIME_FORMAT_YYYYMMDD_HHMMSS) = 0;
+    virtual bool DMAPI SetFromString(const std::string& dateTimeStr, DMDateTimeFormat format = DM_DATETIME_FORMAT_YYYYMMDD_HHMMSS) = 0;
     virtual void DMAPI SetToNow() = 0;
     
     // 获取时间信息
