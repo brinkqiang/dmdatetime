@@ -218,61 +218,75 @@ time_t CDMDateTime::GetTimestamp() const {
 
 std::string CDMDateTime::ToString(DMDateTimeFormat format) const {
     if (!m_isValid) return "";
-    
+
     auto tm_val = GetLocalTm();
-    std::ostringstream oss;
-    
+    char buffer[64]; // Buffer to hold formatted string, 64 chars should be ample.
+
     switch (format) {
-        case DM_DATETIME_FORMAT_YYYYMMDD_HHMMSS:
-            oss << std::setfill('0') << std::setw(4) << (tm_val.tm_year + 1900) << "-"
-                << std::setw(2) << (tm_val.tm_mon + 1) << "-"
-                << std::setw(2) << tm_val.tm_mday << " "
-                << std::setw(2) << tm_val.tm_hour << ":"
-                << std::setw(2) << tm_val.tm_min << ":"
-                << std::setw(2) << tm_val.tm_sec;
-            break;
-            
-        case DM_DATETIME_FORMAT_YYYYMMDD:
-            oss << std::setfill('0') << std::setw(4) << (tm_val.tm_year + 1900) << "-"
-                << std::setw(2) << (tm_val.tm_mon + 1) << "-"
-                << std::setw(2) << tm_val.tm_mday;
-            break;
-            
-        case DM_DATETIME_FORMAT_HHMMSS:
-            oss << std::setfill('0') << std::setw(2) << tm_val.tm_hour << ":"
-                << std::setw(2) << tm_val.tm_min << ":"
-                << std::setw(2) << tm_val.tm_sec;
-            break;
-            
-        case DM_DATETIME_FORMAT_TIMESTAMP:
-            oss << GetTimestamp();
-            break;
-            
-        case DM_DATETIME_FORMAT_ISO8601:
-            oss << std::setfill('0') << std::setw(4) << (tm_val.tm_year + 1900) << "-"
-                << std::setw(2) << (tm_val.tm_mon + 1) << "-"
-                << std::setw(2) << tm_val.tm_mday << "T"
-                << std::setw(2) << tm_val.tm_hour << ":"
-                << std::setw(2) << tm_val.tm_min << ":"
-                << std::setw(2) << tm_val.tm_sec << "Z";
-            break;
-            
-        case DM_DATETIME_FORMAT_RFC2822: {
-            const char* weekdays[] = {"Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"};
-            const char* months[] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun",
-                                  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"};
-            oss << weekdays[tm_val.tm_wday] << ", "
-                << std::setfill('0') << std::setw(2) << tm_val.tm_mday << " "
-                << months[tm_val.tm_mon] << " "
-                << (tm_val.tm_year + 1900) << " "
-                << std::setw(2) << tm_val.tm_hour << ":"
-                << std::setw(2) << tm_val.tm_min << ":"
-                << std::setw(2) << tm_val.tm_sec << " GMT";
-            break;
-        }
+    case DM_DATETIME_FORMAT_YYYYMMDD_HHMMSS:
+        snprintf(buffer, sizeof(buffer), "%04d-%02d-%02d %02d:%02d:%02d",
+            tm_val.tm_year + 1900,
+            tm_val.tm_mon + 1,
+            tm_val.tm_mday,
+            tm_val.tm_hour,
+            tm_val.tm_min,
+            tm_val.tm_sec);
+        break;
+
+    case DM_DATETIME_FORMAT_YYYYMMDD:
+        snprintf(buffer, sizeof(buffer), "%04d-%02d-%02d",
+            tm_val.tm_year + 1900,
+            tm_val.tm_mon + 1,
+            tm_val.tm_mday);
+        break;
+
+    case DM_DATETIME_FORMAT_HHMMSS:
+        snprintf(buffer, sizeof(buffer), "%02d:%02d:%02d",
+            tm_val.tm_hour,
+            tm_val.tm_min,
+            tm_val.tm_sec);
+        break;
+
+    case DM_DATETIME_FORMAT_TIMESTAMP:
+        // Assuming GetTimestamp() returns a type convertible to unsigned long long for %llu.
+        // Adjust format specifier if GetTimestamp() returns a different type (e.g., %lld for signed long long).
+        snprintf(buffer, sizeof(buffer), "%llu", static_cast<unsigned long long>(GetTimestamp()));
+        break;
+
+    case DM_DATETIME_FORMAT_ISO8601:
+        // Note: Original logic uses local time and appends 'Z' (UTC designator).
+        // This is only correct if local time is UTC.
+        snprintf(buffer, sizeof(buffer), "%04d-%02d-%02dT%02d:%02d:%02dZ",
+            tm_val.tm_year + 1900,
+            tm_val.tm_mon + 1,
+            tm_val.tm_mday,
+            tm_val.tm_hour,
+            tm_val.tm_min,
+            tm_val.tm_sec);
+        break;
+
+    case DM_DATETIME_FORMAT_RFC2822: {
+        // Note: Original logic uses local time and appends "GMT".
+        // This is an approximation unless local time is actually GMT/UTC.
+        const char* weekdays[] = { "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" };
+        const char* months[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+                                "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" };
+        snprintf(buffer, sizeof(buffer), "%s, %02d %s %d %02d:%02d:%02d GMT",
+            weekdays[tm_val.tm_wday],
+            tm_val.tm_mday,
+            months[tm_val.tm_mon],
+            tm_val.tm_year + 1900,
+            tm_val.tm_hour,
+            tm_val.tm_min,
+            tm_val.tm_sec);
+        break;
     }
-    
-    return oss.str();
+    default:
+        // If an unknown format value is passed, original code would return an empty string.
+        buffer[0] = '\0';
+        break;
+    }
+    return std::string(buffer);
 }
 
 void CDMDateTime::AddTime(int value, DMTimeUnit unit) {
