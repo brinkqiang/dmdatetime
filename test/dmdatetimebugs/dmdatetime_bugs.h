@@ -41,13 +41,13 @@ public:
     explicit CDMTimeSpan(std::chrono::seconds s) : duration_(s) {}
     CDMTimeSpan(std::time_t totalSeconds = 0) : duration_(totalSeconds) {}
 
-    long long GetTotalDays() const {
+    std::time_t GetTotalDays() const {
         return std::chrono::duration_cast<std::chrono::hours>(duration_).count() / 24;
     }
-    long long GetTotalHours() const {
+    std::time_t GetTotalHours() const {
         return std::chrono::duration_cast<std::chrono::hours>(duration_).count();
     }
-    long long GetTotalMinutes() const {
+    std::time_t GetTotalMinutes() const {
         return std::chrono::duration_cast<std::chrono::minutes>(duration_).count();
     }
     std::time_t GetTotalSeconds() const {
@@ -168,7 +168,7 @@ public:
         return resultDt;
     }
 
-    static CDMDateTime FromTimestamp(time_t timestamp) {
+    static CDMDateTime FromTimestamp(std::time_t timestamp) {
         return CDMDateTime(std::chrono::system_clock::from_time_t(timestamp));
     }
 public:
@@ -322,7 +322,7 @@ public:
         int dow = GetDayOfWeek();
         return dow == 0 || dow == 6;
     }
-    time_t GetTimestamp() const {
+    std::time_t GetTimestamp() const {
         return std::chrono::system_clock::to_time_t(time_point_);
     }
 
