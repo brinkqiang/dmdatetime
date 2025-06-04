@@ -30,7 +30,7 @@ protected:
 // 假设：默认构造的 CDMDateTime 对象是无效的，或者构造函数显式设置了 m_isValid。
 TEST_F(CDMDateTimeTest, DefaultConstructorMakesInvalid) {
     CDMDateTime newDt; // 假设其构造函数将 m_isValid 设置为 false
-    EXPECT_TRUE(newDt.IsValid());
+    EXPECT_FALSE(newDt.IsValid());
     // 如果构造函数设置了默认时区偏移，也可以在这里测试
     // EXPECT_EQ(0, newDt.GetTimeZoneOffset()); // 例如，如果默认为 UTC
 }

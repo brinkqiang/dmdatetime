@@ -26,7 +26,7 @@
 
 CDMDateTime::CDMDateTime() 
     : m_timezoneOffset(0), m_isValid(false) {
-    SetToNow();
+
 }
 
 void CDMDateTime::Release(void) {
