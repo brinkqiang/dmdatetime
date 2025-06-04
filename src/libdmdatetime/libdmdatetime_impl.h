@@ -1,4 +1,4 @@
-
+﻿
 // Copyright (c) 2018 brinkqiang (brink.qiang@gmail.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -25,7 +25,7 @@
 #include "dmdatetime.h"
 #include <chrono>
 
-class CDMDateTimeImpl : public ICDMDateTime
+class CDMDateTimeImpl : public IDMDateTime
 {
 private:
     std::chrono::system_clock::time_point m_timePoint;
@@ -69,14 +69,14 @@ public:
     // 时间运算
     virtual void DMAPI AddTime(int value, DMTimeUnit unit) override;
     virtual void DMAPI SubTime(int value, DMTimeUnit unit) override;
-    virtual long long DMAPI DiffTime(const ICDMDateTime* other, DMTimeUnit unit) const override;
+    virtual long long DMAPI DiffTime(const IDMDateTime* other, DMTimeUnit unit) const override;
     
     // 时间比较
-    virtual bool DMAPI IsEqual(const ICDMDateTime* other) const override;
-    virtual bool DMAPI IsLess(const ICDMDateTime* other) const override;
-    virtual bool DMAPI IsGreater(const ICDMDateTime* other) const override;
-    virtual bool DMAPI IsLessOrEqual(const ICDMDateTime* other) const override;
-    virtual bool DMAPI IsGreaterOrEqual(const ICDMDateTime* other) const override;
+    virtual bool DMAPI IsEqual(const IDMDateTime* other) const override;
+    virtual bool DMAPI IsLess(const IDMDateTime* other) const override;
+    virtual bool DMAPI IsGreater(const IDMDateTime* other) const override;
+    virtual bool DMAPI IsLessOrEqual(const IDMDateTime* other) const override;
+    virtual bool DMAPI IsGreaterOrEqual(const IDMDateTime* other) const override;
     
     // 日期验证和工具
     virtual bool DMAPI IsValid() const override;
@@ -92,7 +92,7 @@ public:
     virtual void DMAPI ConvertFromUTC() override;
     
     // 克隆
-    virtual ICDMDateTime* DMAPI Clone() const override;
+    virtual IDMDateTime* DMAPI Clone() const override;
 };
 
 #endif

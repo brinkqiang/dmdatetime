@@ -1,4 +1,4 @@
-
+﻿
 // Copyright (c) 2018 brinkqiang (brink.qiang@gmail.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -317,7 +317,7 @@ void CDMDateTimeImpl::SubTime(int value, DMTimeUnit unit) {
     AddTime(-value, unit);
 }
 
-long long CDMDateTimeImpl::DiffTime(const ICDMDateTime* other, DMTimeUnit unit) const {
+long long CDMDateTimeImpl::DiffTime(const IDMDateTime* other, DMTimeUnit unit) const {
     if (!m_isValid || !other || !other->IsValid()) return 0;
     
     auto otherTimestamp = other->GetTimestamp();
@@ -346,27 +346,27 @@ long long CDMDateTimeImpl::DiffTime(const ICDMDateTime* other, DMTimeUnit unit) 
     return 0;
 }
 
-bool CDMDateTimeImpl::IsEqual(const ICDMDateTime* other) const {
+bool CDMDateTimeImpl::IsEqual(const IDMDateTime* other) const {
     if (!other) return false;
     return GetTimestamp() == other->GetTimestamp();
 }
 
-bool CDMDateTimeImpl::IsLess(const ICDMDateTime* other) const {
+bool CDMDateTimeImpl::IsLess(const IDMDateTime* other) const {
     if (!other) return false;
     return GetTimestamp() < other->GetTimestamp();
 }
 
-bool CDMDateTimeImpl::IsGreater(const ICDMDateTime* other) const {
+bool CDMDateTimeImpl::IsGreater(const IDMDateTime* other) const {
     if (!other) return false;
     return GetTimestamp() > other->GetTimestamp();
 }
 
-bool CDMDateTimeImpl::IsLessOrEqual(const ICDMDateTime* other) const {
+bool CDMDateTimeImpl::IsLessOrEqual(const IDMDateTime* other) const {
     if (!other) return false;
     return GetTimestamp() <= other->GetTimestamp();
 }
 
-bool CDMDateTimeImpl::IsGreaterOrEqual(const ICDMDateTime* other) const {
+bool CDMDateTimeImpl::IsGreaterOrEqual(const IDMDateTime* other) const {
     if (!other) return false;
     return GetTimestamp() >= other->GetTimestamp();
 }
@@ -420,7 +420,7 @@ void CDMDateTimeImpl::ConvertFromUTC() {
     m_timePoint += std::chrono::minutes(m_timezoneOffset);
 }
 
-ICDMDateTime* CDMDateTimeImpl::Clone() const {
+IDMDateTime* CDMDateTimeImpl::Clone() const {
     CDMDateTimeImpl* clone = new CDMDateTimeImpl();
     clone->m_timePoint = m_timePoint;
     clone->m_timezoneOffset = m_timezoneOffset;
@@ -429,17 +429,17 @@ ICDMDateTime* CDMDateTimeImpl::Clone() const {
 }
 
 // 导出函数实现
-extern "C" DMEXPORT_DLL ICDMDateTime* DMAPI cdmdatetimeGetModule() {
+extern "C" DMEXPORT_DLL IDMDateTime* DMAPI dmdatetimeGetModule() {
     return new CDMDateTimeImpl();
 }
 
-extern "C" DMEXPORT_DLL ICDMDateTime* DMAPI cdmdatetimeCreateFromTimestamp(time_t timestamp) {
+extern "C" DMEXPORT_DLL IDMDateTime* DMAPI dmdatetimeCreateFromTimestamp(time_t timestamp) {
     CDMDateTimeImpl* datetime = new CDMDateTimeImpl();
     datetime->SetFromTimestamp(timestamp);
     return datetime;
 }
 
-extern "C" DMEXPORT_DLL ICDMDateTime* DMAPI cdmdatetimeCreateFromString(const char* dateTimeStr, DMDateTimeFormat format) {
+extern "C" DMEXPORT_DLL IDMDateTime* DMAPI dmdatetimeCreateFromString(const char* dateTimeStr, DMDateTimeFormat format) {
     if (!dateTimeStr) return nullptr;
     
     CDMDateTimeImpl* datetime = new CDMDateTimeImpl();
@@ -453,7 +453,7 @@ extern "C" DMEXPORT_DLL ICDMDateTime* DMAPI cdmdatetimeCreateFromString(const ch
     return datetime;
 }
 
-extern "C" DMEXPORT_DLL ICDMDateTime* DMAPI cdmdatetimeCreateNow() {
+extern "C" DMEXPORT_DLL IDMDateTime* DMAPI dmdatetimeCreateNow() {
     CDMDateTimeImpl* datetime = new CDMDateTimeImpl();
     datetime->SetToNow();
     return datetime;

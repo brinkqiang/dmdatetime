@@ -1,4 +1,4 @@
-
+ï»¿
 // Copyright (c) 2018 brinkqiang (brink.qiang@gmail.com)
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -21,7 +21,7 @@
 
 #ifndef __CDMDATETIME_H_INCLUDE__
 #define __CDMDATETIME_H_INCLUDE__
-#include "dmos.h" // dmos.hÒÑ¾­´¦ÀíÆ½Ì¨Í·ÎÄ¼ş, ÒÔ¼°Ïà¹Øºê¶¨Òå
+#include "dmos.h" // dmos.hå·²ç»å¤„ç†å¹³å°å¤´æ–‡ä»¶, ä»¥åŠç›¸å…³å®å®šä¹‰
 #include <string>
 #include <ctime>
 
@@ -44,19 +44,19 @@ enum DMTimeUnit {
     DM_TIME_UNIT_YEAR
 };
 
-class ICDMDateTime
+class IDMDateTime
 {
 public:
-    virtual ~ICDMDateTime() {}
+    virtual ~IDMDateTime() {}
     virtual void DMAPI Release(void) = 0;
     
-    // »ù´¡ÉèÖÃºÍ»ñÈ¡
+    // åŸºç¡€è®¾ç½®å’Œè·å–
     virtual void DMAPI SetDateTime(int year, int month, int day, int hour = 0, int minute = 0, int second = 0) = 0;
     virtual void DMAPI SetFromTimestamp(time_t timestamp) = 0;
     virtual void DMAPI SetFromString(const std::string& dateTimeStr, DMDateTimeFormat format = DM_DATETIME_FORMAT_YYYYMMDD_HHMMSS) = 0;
     virtual void DMAPI SetToNow() = 0;
     
-    // »ñÈ¡Ê±¼äĞÅÏ¢
+    // è·å–æ—¶é—´ä¿¡æ¯
     virtual int DMAPI GetYear() const = 0;
     virtual int DMAPI GetMonth() const = 0;
     virtual int DMAPI GetDay() const = 0;
@@ -66,44 +66,44 @@ public:
     virtual int DMAPI GetWeekDay() const = 0;  // 0-6 (Sunday-Saturday)
     virtual int DMAPI GetYearDay() const = 0;  // 1-366
     
-    // Ê±¼ä´ÁºÍ×Ö·û´®×ª»»
+    // æ—¶é—´æˆ³å’Œå­—ç¬¦ä¸²è½¬æ¢
     virtual time_t DMAPI GetTimestamp() const = 0;
     virtual std::string DMAPI ToString(DMDateTimeFormat format = DM_DATETIME_FORMAT_YYYYMMDD_HHMMSS) const = 0;
     
-    // Ê±¼äÔËËã
+    // æ—¶é—´è¿ç®—
     virtual void DMAPI AddTime(int value, DMTimeUnit unit) = 0;
     virtual void DMAPI SubTime(int value, DMTimeUnit unit) = 0;
-    virtual long long DMAPI DiffTime(const ICDMDateTime* other, DMTimeUnit unit) const = 0;
+    virtual long long DMAPI DiffTime(const IDMDateTime* other, DMTimeUnit unit) const = 0;
     
-    // Ê±¼ä±È½Ï
-    virtual bool DMAPI IsEqual(const ICDMDateTime* other) const = 0;
-    virtual bool DMAPI IsLess(const ICDMDateTime* other) const = 0;
-    virtual bool DMAPI IsGreater(const ICDMDateTime* other) const = 0;
-    virtual bool DMAPI IsLessOrEqual(const ICDMDateTime* other) const = 0;
-    virtual bool DMAPI IsGreaterOrEqual(const ICDMDateTime* other) const = 0;
+    // æ—¶é—´æ¯”è¾ƒ
+    virtual bool DMAPI IsEqual(const IDMDateTime* other) const = 0;
+    virtual bool DMAPI IsLess(const IDMDateTime* other) const = 0;
+    virtual bool DMAPI IsGreater(const IDMDateTime* other) const = 0;
+    virtual bool DMAPI IsLessOrEqual(const IDMDateTime* other) const = 0;
+    virtual bool DMAPI IsGreaterOrEqual(const IDMDateTime* other) const = 0;
     
-    // ÈÕÆÚÑéÖ¤ºÍ¹¤¾ß
+    // æ—¥æœŸéªŒè¯å’Œå·¥å…·
     virtual bool DMAPI IsValid() const = 0;
     virtual bool DMAPI IsLeapYear() const = 0;
     virtual bool DMAPI IsLeapYear(int year) const = 0;
     virtual int DMAPI GetDaysInMonth() const = 0;
     virtual int DMAPI GetDaysInMonth(int year, int month) const = 0;
     
-    // Ê±Çø²Ù×÷
+    // æ—¶åŒºæ“ä½œ
     virtual void DMAPI SetTimeZoneOffset(int offsetMinutes) = 0;
     virtual int DMAPI GetTimeZoneOffset() const = 0;
     virtual void DMAPI ConvertToUTC() = 0;
     virtual void DMAPI ConvertFromUTC() = 0;
     
-    // ¿ËÂ¡
-    virtual ICDMDateTime* DMAPI Clone() const = 0;
+    // å…‹éš†
+    virtual IDMDateTime* DMAPI Clone() const = 0;
 };
 
-extern "C" DMEXPORT_DLL ICDMDateTime* DMAPI cdmdatetimeGetModule();
-typedef ICDMDateTime* (DMAPI* PFN_cdmdatetimeGetModule)();
+extern "C" DMEXPORT_DLL IDMDateTime* DMAPI dmdatetimeGetModule();
+typedef IDMDateTime* (DMAPI* PFN_dmdatetimeGetModule)();
 
-extern "C" DMEXPORT_DLL ICDMDateTime* DMAPI cdmdatetimeCreateFromTimestamp(time_t timestamp);
-extern "C" DMEXPORT_DLL ICDMDateTime* DMAPI cdmdatetimeCreateFromString(const char* dateTimeStr, DMDateTimeFormat format);
-extern "C" DMEXPORT_DLL ICDMDateTime* DMAPI cdmdatetimeCreateNow();
+extern "C" DMEXPORT_DLL IDMDateTime* DMAPI dmdatetimeCreateFromTimestamp(time_t timestamp);
+extern "C" DMEXPORT_DLL IDMDateTime* DMAPI dmdatetimeCreateFromString(const char* dateTimeStr, DMDateTimeFormat format);
+extern "C" DMEXPORT_DLL IDMDateTime* DMAPI dmdatetimeCreateNow();
 
 #endif // __DMDATETIME_H_INCLUDE__

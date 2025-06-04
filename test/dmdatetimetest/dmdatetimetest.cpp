@@ -26,10 +26,9 @@ protected:
 
 TEST_F(frame_dmdatetime, init)
 {
-    Idmdatetime* module = dmdatetimeGetModule();
+    IDMDateTime* module = dmdatetimeGetModule();
     if (module)
     {
-        module->Test();
         module->Release();
     }
 }
