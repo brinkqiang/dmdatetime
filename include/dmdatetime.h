@@ -175,6 +175,10 @@ public:
         resultDt.SetDateTime(year, month, day, hour, minute, second);
         return resultDt;
     }
+
+    static CDMDateTime FromTimestamp(time_t timestamp) {
+        return CDMDateTime(std::chrono::system_clock::from_time_t(timestamp));
+    }
 public:
     static const char* FORMAT_STANDARD;
     static const char* FORMAT_SHORT_DATE;
@@ -195,9 +199,6 @@ public:
         SetDateTime(year, month, day, hour, minute, second);
     }
 
-    static CDMDateTime FromTimestamp(time_t timestamp) {
-        return CDMDateTime(std::chrono::system_clock::from_time_t(timestamp));
-    }
 
     std::string ToString(const std::string& format_string = "%04d-%02d-%02d %02d:%02d:%02d") const {
         char buffer[128];

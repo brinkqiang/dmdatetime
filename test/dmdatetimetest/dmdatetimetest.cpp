@@ -267,7 +267,6 @@ TEST_F(CDMDateTimeUsageTest, FormatConstants) {
 
     std::string cn_standard_str = dt_ref.ToString(CDMDateTime::TO_STRING_STANDARD_CN);
 
-    fmt::print("{}\n", cn_standard_str); // Useful for manual inspection of complex formats
     EXPECT_NE(std::string::npos, cn_standard_str.find("2024年"));
     EXPECT_NE(std::string::npos, cn_standard_str.find("12月"));
     EXPECT_NE(std::string::npos, cn_standard_str.find("25日"));
@@ -396,8 +395,7 @@ TEST_F(CDMDateTimePracticalTest, Subtract) {
     CDMDateTime startTime(2024, 1, 1, 10, 0, 0);
     CDMDateTime endTime(2024, 1, 1, 11, 30, 1);
 
-    fmt::print("{}\n", startTime.ToString());
-    fmt::print("{}\n", endTime.Subtract(startTime).GetTotalSeconds());
-    fmt::print("{}\n", endTime.Subtract(startTime).GetTotalMinutes());
-    fmt::print("{}\n", endTime.Subtract(startTime).GetTotalHours());
+    EXPECT_EQ(5401, endTime.Subtract(startTime).GetTotalSeconds());
+    EXPECT_EQ(90, endTime.Subtract(startTime).GetTotalMinutes());
+    EXPECT_EQ(1, endTime.Subtract(startTime).GetTotalHours());
 }
