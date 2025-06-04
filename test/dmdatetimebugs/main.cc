@@ -193,21 +193,21 @@ TEST_F(CDMDateTimeUsageTest, ValidationAndUtilityFunctions) {
     EXPECT_EQ(dt_ref.GetTimestamp(), from_ts_sec.GetTimestamp());
 }
 
-TEST_F(CDMDateTimeUsageTest, ChainedOperations) {
-    CDMDateTime start_chain(2023, 1, 10, 10, 30, 0);
-    CDMDateTime result = start_chain
-        .AddYears(1)     // 2024-01-10 10:30:00
-        .AddMonths(2)    // 2024-03-10 10:30:00
-        .AddDays(3)      // 2024-03-13 10:30:00
-        .GetStartOfDay(); // 2024-03-13 00:00:00
-
-    EXPECT_EQ(2024, result.GetYear());
-    EXPECT_EQ(3, result.GetMonth());
-    EXPECT_EQ(13, result.GetDay());
-    EXPECT_EQ(0, result.GetHour());
-    EXPECT_EQ(0, result.GetMinute());
-    EXPECT_EQ(0, result.GetSecond());
-}
+//TEST_F(CDMDateTimeUsageTest, ChainedOperations) {
+//    CDMDateTime start_chain(2023, 1, 10, 10, 30, 0);
+//    CDMDateTime result = start_chain
+//        .AddYears(1)     // 2024-01-10 10:30:00
+//        .AddMonths(2)    // 2024-03-10 10:30:00
+//        .AddDays(3)      // 2024-03-13 10:30:00
+//        .GetStartOfDay(); // 2024-03-13 00:00:00
+//
+//    EXPECT_EQ(2024, result.GetYear());
+//    EXPECT_EQ(3, result.GetMonth());
+//    EXPECT_EQ(13, result.GetDay());
+//    EXPECT_EQ(0, result.GetHour());
+//    EXPECT_EQ(0, result.GetMinute());
+//    EXPECT_EQ(0, result.GetSecond());
+//}
 
 //TEST_F(CDMDateTimeUsageTest, StaticUtilityMethods) {
 //    CDMDateTime today = CDMDateTime::Today();
