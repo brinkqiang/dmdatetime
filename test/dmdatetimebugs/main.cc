@@ -6,35 +6,35 @@
 #include "dmformat.h"
 #include "dmfix_win_utf8.h"
 
-class env_dmdatetime
-{
-public:
-    void init() {}
-    void uninit() {}
-};
-
-class CDMDateTimeUsageTest : public ::testing::Test {
-public:
-    virtual void SetUp()
-    {
-        env.init();
-
-        dt_ref = CDMDateTime(2024, 12, 25, 15, 30, 45);
-        dt_ref_midnight = CDMDateTime(2024, 12, 25);
-        // dt_ts_ref is for timestamp 1703512245L (2023-12-25 13:50:45 UTC)
-        dt_ts_ref = CDMDateTime::FromTimestamp(1703512245L);
-    }
-    virtual void TearDown()
-    {
-        env.uninit();
-    }
-protected:
-    env_dmdatetime env;
-    CDMDateTime dt_ref;
-    CDMDateTime dt_ref_midnight;
-    CDMDateTime dt_ts_ref;
-
-};
+//class env_dmdatetime
+//{
+//public:
+//    void init() {}
+//    void uninit() {}
+//};
+//
+//class CDMDateTimeUsageTest : public ::testing::Test {
+//public:
+//    virtual void SetUp()
+//    {
+//        env.init();
+//
+//        dt_ref = CDMDateTime(2024, 12, 25, 15, 30, 45);
+//        dt_ref_midnight = CDMDateTime(2024, 12, 25);
+//        // dt_ts_ref is for timestamp 1703512245L (2023-12-25 13:50:45 UTC)
+//        dt_ts_ref = CDMDateTime::FromTimestamp(1703512245L);
+//    }
+//    virtual void TearDown()
+//    {
+//        env.uninit();
+//    }
+//protected:
+//    env_dmdatetime env;
+//    CDMDateTime dt_ref;
+//    CDMDateTime dt_ref_midnight;
+//    CDMDateTime dt_ts_ref;
+//
+//};
 
 //TEST_F(CDMDateTimeUsageTest, CreationMethods) {
 //    CDMDateTime now = CDMDateTime::Now();
