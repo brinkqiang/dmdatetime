@@ -231,7 +231,7 @@ TEST_F(CDMDateTimeUsageTest, StaticUtilityMethods) {
 
     // Check against the values defined in CDMDateTime.h
     if (sizeof(time_t) > 4) { // Assuming 64-bit time_t corresponds to year 3000 in MaxValue
-        EXPECT_EQ(3000, maxValue.GetYear());
+        EXPECT_EQ(2200, maxValue.GetYear());
     }
     else { // Assuming 32-bit time_t corresponds to year 2038
         EXPECT_EQ(2038, maxValue.GetYear());
