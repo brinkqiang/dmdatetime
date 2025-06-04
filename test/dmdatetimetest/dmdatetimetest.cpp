@@ -1,7 +1,7 @@
 ﻿
 #include "libdmdatetime_impl.h"
 #include "gtest.h"
-
+#include "dmformat.h"
 class env_dmdatetime
 {
 public:
@@ -201,4 +201,16 @@ TEST_F(CDMDateTimeTest, CloneCreatesIdenticalButSeparateInstance) {
     EXPECT_EQ(15, cloned_dt_interface->GetDay()) << "Clone's day should remain unchanged.";
 
     cloned_dt_interface->Release(); // 释放克隆对象
+}
+
+
+TEST_F(CDMDateTimeTest, ConvertToUTCAndBack) {
+
+    CDMDateTime oDatetime = CDMDateTime::Now();
+
+    fmt::print("Now is {}\n", oDatetime.ToString());
+
+    oDatetime.AddTime(1, DM_TIME_UNIT_DAY);
+
+    fmt::print("Now + 1d is {}\n", oDatetime.ToString());
 }
