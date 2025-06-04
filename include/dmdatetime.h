@@ -334,7 +334,7 @@ public:
 
     static CDMDateTime MaxValue() {
         if (sizeof(std::time_t) > 4) {
-            return CDMDateTime(2800, 1, 1, 1, 1, 1);
+            return CDMDateTime(3000, 1, 1, 8, 0, 0);
         }
         else {
             return CDMDateTime(2038, 1, 19, 3, 14, 7);
