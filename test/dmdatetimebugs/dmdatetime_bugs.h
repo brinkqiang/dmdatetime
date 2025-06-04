@@ -18,8 +18,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef __DMDATE_TIME_H__
-#define __DMDATE_TIME_H__
+#ifndef __DMDATE_TIME_BUGS_H__
+#define __DMDATE_TIME_BUGS_H__
 
 #include <string>
 #include <chrono>
@@ -406,4 +406,4 @@ const char* CDMDateTime::TO_STRING_SHORT_DATE_CN = "%04d年%02d月%02d日";
 const int CDMDateTime::DMDATETIME_YEAR_MAX = 3000;
 const int CDMDateTime::DMDATETIME_YEAR_MIN = 1970;
 
-#endif // __DMDATE_TIME_H__
+#endif // __DMDATE_TIME_BUGS_H__
