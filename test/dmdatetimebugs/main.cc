@@ -380,19 +380,19 @@ class CDMDateTimePracticalTest : public ::testing::Test {
 //    EXPECT_EQ(5, workdays2); // Mon, Tue, Wed, Thu, Fri
 //}
 
-//TEST_F(CDMDateTimePracticalTest, OperationTimeCalculation) {
-//    CDMDateTime startTime(2024, 1, 1, 10, 0, 0);
-//    CDMDateTime endTime(2024, 1, 1, 10, 0, 1);
-//
-//    CDMTimeSpan elapsed = endTime.Subtract(startTime);
-//    auto totalSeconds = elapsed.GetTotalSeconds();
-//    EXPECT_DOUBLE_EQ(1, totalSeconds);
-//
-//    CDMDateTime startTime2(2024, 1, 1, 10, 0, 0);
-//    CDMDateTime endTime2(2024, 1, 1, 10, 1, 30); // 1 minute 30 seconds
-//    CDMTimeSpan elapsed2 = endTime2.Subtract(startTime2);
-//    EXPECT_DOUBLE_EQ(90, elapsed2.GetTotalSeconds()); // 60 + 30 = 90 seconds
-//}
+TEST_F(CDMDateTimePracticalTest, OperationTimeCalculation) {
+    CDMDateTime startTime(2024, 1, 1, 10, 0, 0);
+    CDMDateTime endTime(2024, 1, 1, 10, 0, 1);
+
+    CDMTimeSpan elapsed = endTime.Subtract(startTime);
+    auto totalSeconds = elapsed.GetTotalSeconds();
+    EXPECT_DOUBLE_EQ(1, totalSeconds);
+
+    CDMDateTime startTime2(2024, 1, 1, 10, 0, 0);
+    CDMDateTime endTime2(2024, 1, 1, 10, 1, 30); // 1 minute 30 seconds
+    CDMTimeSpan elapsed2 = endTime2.Subtract(startTime2);
+    EXPECT_DOUBLE_EQ(90, elapsed2.GetTotalSeconds()); // 60 + 30 = 90 seconds
+}
 
 TEST_F(CDMDateTimePracticalTest, Subtract) {
     CDMDateTime startTime(2024, 1, 1, 10, 0, 0);
