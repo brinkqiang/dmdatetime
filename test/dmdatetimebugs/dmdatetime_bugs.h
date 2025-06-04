@@ -181,6 +181,8 @@ public:
     static const char* TO_STRING_SHORT_DATE;
     static const char* TO_STRING_STANDARD_CN;
     static const char* TO_STRING_SHORT_DATE_CN;
+    static const int DMDATETIME_YEAR_MAX;
+    static const int DMDATETIME_YEAR_MIN;
 
     CDMDateTime() : time_point_(std::chrono::system_clock::now()) {
         time_point_ = std::chrono::time_point_cast<std::chrono::seconds>(time_point_);
@@ -400,5 +402,8 @@ const char* CDMDateTime::TO_STRING_STANDARD = "%04d-%02d-%02d %02d:%02d:%02d";
 const char* CDMDateTime::TO_STRING_SHORT_DATE = "%04d-%02d-%02d";
 const char* CDMDateTime::TO_STRING_STANDARD_CN = "%04d年%02d月%02d日 %02d时%02d分%02d秒";
 const char* CDMDateTime::TO_STRING_SHORT_DATE_CN = "%04d年%02d月%02d日";
+
+const int CDMDateTime::DMDATETIME_YEAR_MAX = 3000;
+const int CDMDateTime::DMDATETIME_YEAR_MIN = 1970;
 
 #endif // __DMDATE_TIME_H__
