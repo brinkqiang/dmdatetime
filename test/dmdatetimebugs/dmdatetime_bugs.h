@@ -331,11 +331,11 @@ public:
     }
 
     static CDMDateTime MinValue() {
-        return CDMDateTime(1970, 1, 1, 8, 0, 0);
+        return CDMDateTime(DMDATETIME_YEAR_MIN, 1, 1, 8, 0, 0);
     }
 
     static CDMDateTime MaxValue() {
-        return CDMDateTime(3000, 1, 1, 8, 0, 0);
+        return CDMDateTime(DMDATETIME_YEAR_MAX, 1, 1, 8, 0, 0);
     }
 
     bool IsBetween(const CDMDateTime& start, const CDMDateTime& end, bool inclusiveStart = true, bool inclusiveEnd = true) const {
