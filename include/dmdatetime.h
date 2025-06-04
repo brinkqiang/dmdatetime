@@ -160,8 +160,8 @@ public:
     static const char* TO_STRING_SHORT_DATE;
     static const char* TO_STRING_STANDARD_CN;
     static const char* TO_STRING_SHORT_DATE_CN;
-    static const int DMDATETIME_YEAR_MAX = 3000;
-    static const int DMDATETIME_YEAR_MIN = 1970;
+    static const int DMDATETIME_YEAR_MAX;
+    static const int DMDATETIME_YEAR_MIN;
     CDMDateTime() : time_t_value_(std::time(nullptr)) {}
 
     CDMDateTime(int year, int month, int day, int hour = 0, int minute = 0, int second = 0) {
@@ -387,5 +387,7 @@ const char* CDMDateTime::TO_STRING_STANDARD = "%04d-%02d-%02d %02d:%02d:%02d";
 const char* CDMDateTime::TO_STRING_SHORT_DATE = "%04d-%02d-%02d";
 const char* CDMDateTime::TO_STRING_STANDARD_CN = "%04d年%02d月%02d日 %02d时%02d分%02d秒";
 const char* CDMDateTime::TO_STRING_SHORT_DATE_CN = "%04d年%02d月%02d日";
+const int CDMDateTime::DMDATETIME_YEAR_MAX = 3000;
+const int CDMDateTime::DMDATETIME_YEAR_MIN = 1970;
 
 #endif // __DMDATE_TIME_H__
