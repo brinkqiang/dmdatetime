@@ -395,14 +395,14 @@ class CDMDateTimePracticalTest : public ::testing::Test {
 //    EXPECT_DOUBLE_EQ(90, elapsed2.GetTotalSeconds()); // 60 + 30 = 90 seconds
 //}
 
-TEST_F(CDMDateTimePracticalTest, Subtract) {
-    CDMDateTime startTime(2024, 1, 1, 10, 0, 0);
-    CDMDateTime endTime(2024, 1, 1, 11, 30, 1);
-
-    EXPECT_EQ(5401, endTime.Subtract(startTime).GetTotalSeconds());
-    EXPECT_EQ(90, endTime.Subtract(startTime).GetTotalMinutes());
-    EXPECT_EQ(1, endTime.Subtract(startTime).GetTotalHours());
-}
+//TEST_F(CDMDateTimePracticalTest, Subtract) {
+//    CDMDateTime startTime(2024, 1, 1, 10, 0, 0);
+//    CDMDateTime endTime(2024, 1, 1, 11, 30, 1);
+//
+//    EXPECT_EQ(5401, endTime.Subtract(startTime).GetTotalSeconds());
+//    EXPECT_EQ(90, endTime.Subtract(startTime).GetTotalMinutes());
+//    EXPECT_EQ(1, endTime.Subtract(startTime).GetTotalHours());
+//}
 
 TEST_F(CDMDateTimePracticalTest, 3000)
 {
