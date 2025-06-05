@@ -183,7 +183,7 @@ public:
     }
 
     inline static CDMDateTime MaxValue() {
-        static CDMDateTime MaxValue(DMDATETIME_YEAR_MIN, 1, 1, 8, 0, 0);
+        static CDMDateTime MaxValue(DMDATETIME_YEAR_MAX, 1, 1, 8, 0, 0);
         return MaxValue;
     }
 
