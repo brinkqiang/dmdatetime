@@ -69,7 +69,7 @@ class CDMDateTime {
 private:
     time_t time_t_value_;
 
-    std::tm to_tm_local() const {
+    inline std::tm to_tm_local() const {
         std::tm local_tm{};
 #ifdef _WIN32
         localtime_s(&local_tm, &time_t_value_);
@@ -90,7 +90,7 @@ private:
     }
 
 public:
-    void SetDateTime(int year, int month, int day, int hour, int minute, int second) {
+    inline void SetDateTime(int year, int month, int day, int hour, int minute, int second) {
         std::tm t{};
         t.tm_year = year - 1900;
         t.tm_mon = month - 1;
@@ -106,12 +106,12 @@ public:
         }
     }
 
-    void SetDate(int year, int month, int day) {
+    inline void SetDate(int year, int month, int day) {
         std::tm t_current = to_tm_local();
         SetDateTime(year, month, day, t_current.tm_hour, t_current.tm_min, t_current.tm_sec);
     }
 
-    void SetTime(int hour, int minute, int second) {
+    inline void SetTime(int hour, int minute, int second) {
         std::tm t_current = to_tm_local();
         SetDateTime(t_current.tm_year + 1900, t_current.tm_mon + 1, t_current.tm_mday, hour, minute, second);
     }
@@ -123,7 +123,7 @@ public:
         return CDMDateTime(std::time(nullptr));
     }
 
-    static CDMDateTime Parse(const std::string& dateTimeStr, const std::string& sscanf_format = FORMAT_STANDARD) {
+    inline static CDMDateTime Parse(const std::string& dateTimeStr, const std::string& sscanf_format = FORMAT_STANDARD) {
         int year = 0, month = 0, day = 0;
         int hour = 0, minute = 0, second = 0;
 
@@ -146,21 +146,21 @@ public:
         return resultDt;
     }
 
-    static CDMDateTime FromTimestamp(time_t timestamp) {
+    inline static CDMDateTime FromTimestamp(time_t timestamp) {
         return CDMDateTime(timestamp);
     }
 
 
-    static CDMDateTime Today() {
+    inline static CDMDateTime Today() {
         return Now().GetStartOfDay();
     }
 
-    static CDMDateTime MinValue() {
+    inline static CDMDateTime MinValue() {
         static const CDMDateTime MinValue(DMDATETIME_YEAR_MIN, 1, 1, 8, 0, 0);
         return MinValue;
     }
 
-    static CDMDateTime MaxValue() {
+    inline static CDMDateTime MaxValue() {
         static const CDMDateTime MaxValue(DMDATETIME_YEAR_MAX, 1, 1, 8, 0, 0);
         return MaxValue;
     }
@@ -183,7 +183,7 @@ public:
         SetDateTime(year, month, day, hour, minute, second);
     }
 
-    std::string ToString(const std::string& format_string = TO_STRING_STANDARD) const {
+    inline std::string ToString(const std::string& format_string = TO_STRING_STANDARD) const {
         char buffer[128] = { 0 };
         std::tm t_local = to_tm_local();
         snprintf(buffer, sizeof(buffer), format_string.c_str(),
@@ -197,11 +197,11 @@ public:
         return std::string(buffer);
     }
 
-    std::string ToISOString() const {
+    inline std::string ToISOString() const {
         return ToString(TO_STRING_STANDARD); // Original behavior, not strictly ISO 8601
     }
 
-    std::string ToUTCString() const {
+    inline std::string ToUTCString() const {
         char buffer[128] = { 0 };
         std::tm t_utc_val = to_tm_utc();
         size_t len = strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S UTC", &t_utc_val);
@@ -211,16 +211,16 @@ public:
         return std::string(buffer);
     }
 
-    int GetYear() const { return to_tm_local().tm_year + 1900; }
-    int GetMonth() const { return to_tm_local().tm_mon + 1; }
-    int GetDay() const { return to_tm_local().tm_mday; }
-    int GetHour() const { return to_tm_local().tm_hour; }
-    int GetMinute() const { return to_tm_local().tm_min; }
-    int GetSecond() const { return to_tm_local().tm_sec; }
-    int GetDayOfWeek() const { return to_tm_local().tm_wday; } // 0=Sunday, 6=Saturday
-    int GetDayOfYear() const { return to_tm_local().tm_yday + 1; } // tm_yday is 0-365
+    inline int GetYear() const { return to_tm_local().tm_year + 1900; }
+    inline int GetMonth() const { return to_tm_local().tm_mon + 1; }
+    inline int GetDay() const { return to_tm_local().tm_mday; }
+    inline int GetHour() const { return to_tm_local().tm_hour; }
+    inline int GetMinute() const { return to_tm_local().tm_min; }
+    inline int GetSecond() const { return to_tm_local().tm_sec; }
+    inline int GetDayOfWeek() const { return to_tm_local().tm_wday; } // 0=Sunday, 6=Saturday
+    inline int GetDayOfYear() const { return to_tm_local().tm_yday + 1; } // tm_yday is 0-365
 
-    CDMDateTime AddYears(int years) const {
+    inline CDMDateTime AddYears(int years) const {
         std::tm t = to_tm_local();
         t.tm_year += years;
         t.tm_isdst = -1;
@@ -229,7 +229,7 @@ public:
         return CDMDateTime(tt);
     }
 
-    CDMDateTime AddMonths(int months) const {
+    inline CDMDateTime AddMonths(int months) const {
         std::tm t = to_tm_local();
         int new_month_tm = t.tm_mon + months;
         t.tm_year += new_month_tm / 12;
@@ -244,24 +244,24 @@ public:
         return CDMDateTime(tt);
     }
 
-    CDMDateTime AddDays(long long days) const {
+    inline CDMDateTime AddDays(long long days) const {
         return CDMDateTime(time_t_value_ + days * 24LL * 60 * 60);
     }
-    CDMDateTime AddHours(long long hours) const {
+    inline CDMDateTime AddHours(long long hours) const {
         return CDMDateTime(time_t_value_ + hours * 60LL * 60);
     }
-    CDMDateTime AddMinutes(long long minutes) const {
+    inline CDMDateTime AddMinutes(long long minutes) const {
         return CDMDateTime(time_t_value_ + minutes * 60LL);
     }
-    CDMDateTime AddSeconds(long long seconds) const {
+    inline CDMDateTime AddSeconds(long long seconds) const {
         return CDMDateTime(time_t_value_ + seconds);
     }
 
-    CDMTimeSpan Subtract(const CDMDateTime& other) const {
+    inline CDMTimeSpan Subtract(const CDMDateTime& other) const {
         return CDMTimeSpan(time_t_value_ - other.time_t_value_);
     }
 
-    CDMTimeSpan operator-(const CDMDateTime& other) const {
+    inline CDMTimeSpan operator-(const CDMDateTime& other) const {
         return Subtract(other);
     }
 
@@ -279,19 +279,19 @@ public:
     bool operator==(const CDMDateTime& other) const { return time_t_value_ == other.time_t_value_; }
     bool operator!=(const CDMDateTime& other) const { return time_t_value_ != other.time_t_value_; }
 
-    CDMDateTime GetStartOfDay() const {
+    inline CDMDateTime GetStartOfDay() const {
         std::tm t = to_tm_local();
         return CDMDateTime(t.tm_year + 1900, t.tm_mon + 1, t.tm_mday, 0, 0, 0);
     }
-    CDMDateTime GetEndOfDay() const {
+    inline CDMDateTime GetEndOfDay() const {
         std::tm t = to_tm_local();
         return CDMDateTime(t.tm_year + 1900, t.tm_mon + 1, t.tm_mday, 23, 59, 59);
     }
-    CDMDateTime GetStartOfMonth() const {
+    inline CDMDateTime GetStartOfMonth() const {
         std::tm t = to_tm_local();
         return CDMDateTime(t.tm_year + 1900, t.tm_mon + 1, 1, 0, 0, 0);
     }
-    CDMDateTime GetEndOfMonth() const {
+    inline CDMDateTime GetEndOfMonth() const {
         std::tm t = to_tm_local();
         int year = t.tm_year + 1900;
         int month = t.tm_mon + 1;
@@ -303,59 +303,59 @@ public:
             return startOfNextMonth.AddSeconds(-1);
         }
     }
-    CDMDateTime GetStartOfYear() const {
+    inline CDMDateTime GetStartOfYear() const {
         std::tm t = to_tm_local();
         return CDMDateTime(t.tm_year + 1900, 1, 1, 0, 0, 0);
     }
-    CDMDateTime GetEndOfYear() const {
+    inline CDMDateTime GetEndOfYear() const {
         std::tm t = to_tm_local();
         return CDMDateTime(t.tm_year + 1900, 12, 31, 23, 59, 59);
     }
 
-    bool IsLeapYear() const {
+    inline bool IsLeapYear() const {
         int y = GetYear();
         return (y % 4 == 0 && y % 100 != 0) || (y % 400 == 0);
     }
-    bool IsWeekday() const {
+    inline bool IsWeekday() const {
         int dow = GetDayOfWeek();
         return dow >= 1 && dow <= 5; // Monday (1) to Friday (5)
     }
-    bool IsWeekend() const {
+    inline bool IsWeekend() const {
         int dow = GetDayOfWeek();
         return dow == 0 || dow == 6; // Sunday (0) or Saturday (6)
     }
-    time_t GetTimestamp() const {
+    inline time_t GetTimestamp() const {
         return time_t_value_;
     }
 
 
-    bool IsBetween(const CDMDateTime& start, const CDMDateTime& end, bool inclusiveStart = true, bool inclusiveEnd = true) const {
+    inline bool IsBetween(const CDMDateTime& start, const CDMDateTime& end, bool inclusiveStart = true, bool inclusiveEnd = true) const {
         bool checkLower = inclusiveStart ? (*this >= start) : (*this > start);
         if (!checkLower) return false;
         bool checkUpper = inclusiveEnd ? (*this <= end) : (*this < end);
         return checkUpper;
     }
 
-    std::string ToLunarString() const {
+    inline std::string ToLunarString() const {
         return "农历支持未实现 (Lunar support not implemented)";
     }
 
     // ----- 新增接口 -----
-    CDMDateTime TomorrowAt(int hour, int minute, int second) const {
+    inline CDMDateTime TomorrowAt(int hour, int minute, int second) const {
         CDMDateTime tomorrow_date_part = AddDays(1);
         return CDMDateTime(tomorrow_date_part.GetYear(), tomorrow_date_part.GetMonth(), tomorrow_date_part.GetDay(), hour, minute, second);
     }
 
-    CDMDateTime YesterdayAt(int hour, int minute, int second) const {
+    inline CDMDateTime YesterdayAt(int hour, int minute, int second) const {
         CDMDateTime yesterday_date_part = AddDays(-1);
         return CDMDateTime(yesterday_date_part.GetYear(), yesterday_date_part.GetMonth(), yesterday_date_part.GetDay(), hour, minute, second);
     }
 
-    CDMDateTime TodayAt(int hour, int minute, int second) const {
+    inline CDMDateTime TodayAt(int hour, int minute, int second) const {
         return CDMDateTime(GetYear(), GetMonth(), GetDay(), hour, minute, second);
     }
 
-    CDMDateTime NextWeekdayAt(int target_weekday_tm_wday, int hour, int minute, int second) const {
+    inline CDMDateTime NextWeekdayAt(int target_weekday_tm_wday, int hour, int minute, int second) const {
         if (target_weekday_tm_wday < 0 || target_weekday_tm_wday > 6) {
             throw std::out_of_range("target_weekday_tm_wday must be between 0 (Sunday) and 6 (Saturday).");
         }
@@ -368,7 +368,7 @@ public:
         return CDMDateTime(target_day_date_part.GetYear(), target_day_date_part.GetMonth(), target_day_date_part.GetDay(), hour, minute, second);
     }
 
-    CDMDateTime NextMonthOn(int day, int hour, int minute, int second) const {
+    inline CDMDateTime NextMonthOn(int day, int hour, int minute, int second) const {
         std::tm t_current = to_tm_local();
         int target_year = t_current.tm_year + 1900;
         int target_month_one_based = t_current.tm_mon + 1 + 1; // tm_mon is 0-11, +1 for current month 1-12, +1 for next month
