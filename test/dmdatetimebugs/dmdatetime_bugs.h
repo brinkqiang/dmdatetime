@@ -171,6 +171,22 @@ public:
     static CDMDateTime FromTimestamp(std::time_t timestamp) {
         return CDMDateTime(std::chrono::system_clock::from_time_t(timestamp));
     }
+
+
+    inline static CDMDateTime Today() {
+        return Now().GetStartOfDay();
+    }
+
+    inline static CDMDateTime MinValue() {
+        static CDMDateTime MinValue(DMDATETIME_YEAR_MIN, 1, 1, 8, 0, 0);
+        return MinValue;
+    }
+
+    inline static CDMDateTime MaxValue() {
+        static CDMDateTime MaxValue(DMDATETIME_YEAR_MIN, 1, 1, 8, 0, 0);
+        return MaxValue;
+    }
+
 public:
     static const char* FORMAT_STANDARD;
     static const char* FORMAT_SHORT_DATE;
@@ -324,18 +340,6 @@ public:
     }
     inline std::time_t GetTimestamp() const {
         return std::chrono::system_clock::to_time_t(time_point_);
-    }
-
-    inline static CDMDateTime Today() {
-        return Now().GetStartOfDay();
-    }
-
-    inline static CDMDateTime MinValue() {
-        return CDMDateTime(DMDATETIME_YEAR_MIN, 1, 1, 8, 0, 0);
-    }
-
-    inline static CDMDateTime MaxValue() {
-        return CDMDateTime(DMDATETIME_YEAR_MAX, 1, 1, 8, 0, 0);
     }
 
     inline bool IsBetween(const CDMDateTime& start, const CDMDateTime& end, bool inclusiveStart = true, bool inclusiveEnd = true) const {
