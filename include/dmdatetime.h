@@ -149,6 +149,21 @@ public:
     static CDMDateTime FromTimestamp(time_t timestamp) {
         return CDMDateTime(timestamp);
     }
+
+
+    static CDMDateTime Today() {
+        return Now().GetStartOfDay();
+    }
+
+    static CDMDateTime MinValue() {
+        static const CDMDateTime MinValue(DMDATETIME_YEAR_MIN, 1, 1, 8, 0, 0);
+        return MinValue;
+    }
+
+    static CDMDateTime MaxValue() {
+        static const CDMDateTime MaxValue(DMDATETIME_YEAR_MAX, 1, 1, 8, 0, 0);
+        return MaxValue;
+    }
 public:
     // These static const char* members require definition in a .cpp file.
     static const char* FORMAT_STANDARD;
@@ -313,17 +328,6 @@ public:
         return time_t_value_;
     }
 
-    static CDMDateTime Today() {
-        return Now().GetStartOfDay();
-    }
-
-    static CDMDateTime MinValue() {
-        return CDMDateTime(DMDATETIME_YEAR_MIN, 1, 1, 8, 0, 0); // Original value
-    }
-
-    static CDMDateTime MaxValue() {
-        return CDMDateTime(DMDATETIME_YEAR_MAX, 1, 1, 8, 0, 0); // Original value
-    }
 
     bool IsBetween(const CDMDateTime& start, const CDMDateTime& end, bool inclusiveStart = true, bool inclusiveEnd = true) const {
         bool checkLower = inclusiveStart ? (*this >= start) : (*this > start);
