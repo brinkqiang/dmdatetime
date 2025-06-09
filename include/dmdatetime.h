@@ -28,6 +28,11 @@
 #include <cstring> // For C-style string operations (though not directly used extensively)
 // Removed <chrono>, <iomanip> (unless needed for other parts, not for core logic here)
 // <algorithm>, <vector> were included but not used directly by the classes.
+#ifdef _WIN32
+#define timegm_custom _mkgmtime
+#else
+#define timegm_custom timegm
+#endif
 
 class CDMDateTime;
 
@@ -188,7 +193,7 @@ public:
     inline std::string ToString(const std::string& format_string = TO_STRING_STANDARD) const {
         char buffer[128] = { 0 };
         std::tm t_local = to_tm_local();
-        snprintf(buffer, sizeof(buffer), format_string.c_str(),
+        std::snprintf(buffer, sizeof(buffer), format_string.c_str(),
             t_local.tm_year + 1900,
             t_local.tm_mon + 1,
             t_local.tm_mday,
@@ -199,20 +204,47 @@ public:
         return std::string(buffer);
     }
 
-    inline std::string ToISOString() const {
-        return ToString(TO_STRING_STANDARD); // Original behavior, not strictly ISO 8601
-    }
-
     inline std::string ToUTCString() const {
         char buffer[128] = { 0 };
         std::tm t_utc_val = to_tm_utc();
-        size_t len = strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S UTC", &t_utc_val);
-        if (len == 0) {
-            buffer[0] = '\0';
-        }
+        // 使用 ISO 8601 标准UTC格式，以 'Z' 结尾
+        std::strftime(buffer, sizeof(buffer), "%Y-%m-%dT%H:%M:%SZ", &t_utc_val);
         return std::string(buffer);
     }
 
+    inline std::string ToISOString() const {
+        // 1. 获取本地时间各组件
+        std::tm t_local = to_tm_local();
+
+        // 2. 计算本地时间与UTC时间的偏移量（秒）
+        std::tm t_utc = to_tm_utc();
+        // 必须复制一份，因为 timegm/mktime 可能会修改 tm 结构
+        std::tm t_local_for_calc = t_local;
+
+        std::time_t local_as_utc_ts = timegm_custom(&t_local_for_calc);
+        std::time_t original_utc_ts = GetTimestamp();
+
+        long offset_seconds = static_cast<long>(original_utc_ts - local_as_utc_ts);
+
+        // 3. 将偏移量秒数格式化为 ±hh:mm
+        char offset_buf[8];
+        long offset_hours = offset_seconds / 3600;
+        long offset_minutes = (std::abs(offset_seconds) % 3600) / 60;
+        std::snprintf(offset_buf, sizeof(offset_buf), "%+03ld:%02ld", offset_hours, offset_minutes);
+
+        // 4. 组合成最终的ISO 8601字符串
+        char buffer[128] = { 0 };
+        std::snprintf(buffer, sizeof(buffer), "%04d-%02d-%02dT%02d:%02d:%02d%s",
+            t_local.tm_year + 1900,
+            t_local.tm_mon + 1,
+            t_local.tm_mday,
+            t_local.tm_hour,
+            t_local.tm_min,
+            t_local.tm_sec,
+            offset_buf
+        );
+        return std::string(buffer);
+    }
     inline int GetYear() const { return to_tm_local().tm_year + 1900; }
     inline int GetMonth() const { return to_tm_local().tm_mon + 1; }
     inline int GetDay() const { return to_tm_local().tm_mday; }
