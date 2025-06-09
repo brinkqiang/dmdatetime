@@ -227,7 +227,7 @@ public:
         int offset_seconds = static_cast<int>(std::difftime(original_utc_ts, local_as_utc_ts));
 
         // 3. 将偏移量秒数格式化为 ±hh:mm
-        char offset_buf[12] = {0};
+        char offset_buf[12] = { 0 };
         int offset_hours = offset_seconds / 3600;
         int offset_minutes = (std::abs(offset_seconds) % 3600) / 60;
         // 使用 %d 和 %02d 来匹配 int 类型
