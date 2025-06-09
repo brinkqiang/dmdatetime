@@ -449,4 +449,8 @@ TEST_F(CDMDateTimePracticalTest, NextMonthOn)
     now_next.SetDateTime(now_next.GetYear(), now_next.GetMonth(), 1, 8, 0, 0);
 
     ASSERT_TRUE(next.ToString() == now_next.ToString());
+
+    fmt::print("{}\n", next.ToString());
+    fmt::print("{}\n", next.ToUTCString());
+    fmt::print("{}\n", next.ToISOString());
 }
