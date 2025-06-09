@@ -158,12 +158,12 @@ public:
     }
 
     inline static CDMDateTime MinValue() {
-        static const CDMDateTime MinValue(DMDATETIME_YEAR_MIN, 1, 1, 8, 0, 0);
+        static const CDMDateTime MinValue = FromTimestamp(0);
         return MinValue;
     }
 
     inline static CDMDateTime MaxValue() {
-        static const CDMDateTime MaxValue(DMDATETIME_YEAR_MAX, 1, 1, 8, 0, 0);
+        static const CDMDateTime MaxValue(DMDATETIME_YEAR_MAX, 1, 1, 0, 0, 0);
         return MaxValue;
     }
 public:

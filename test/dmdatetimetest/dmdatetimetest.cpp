@@ -405,7 +405,7 @@ TEST_F(CDMDateTimePracticalTest, years_3000)
 {
     CDMDateTime maxValue = CDMDateTime::MaxValue();
 
-    ASSERT_TRUE(maxValue.ToString() == "3000-01-01 08:00:00");
+    ASSERT_TRUE(maxValue.ToString() == "3000-01-01 00:00:00");
 
     CDMDateTime xdata;
     xdata.SetDateTime(3000, 1, 1, 12, 0, 0);
