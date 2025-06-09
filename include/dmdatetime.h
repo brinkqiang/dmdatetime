@@ -217,20 +217,21 @@ public:
         std::tm t_local = to_tm_local();
 
         // 2. 计算本地时间与UTC时间的偏移量（秒）
-        std::tm t_utc = to_tm_utc();
-        // 必须复制一份，因为 timegm/mktime 可能会修改 tm 结构
+        // 必须复制一份，因为 timegm_custom 可能会修改 tm 结构
         std::tm t_local_for_calc = t_local;
 
         std::time_t local_as_utc_ts = timegm_custom(&t_local_for_calc);
         std::time_t original_utc_ts = GetTimestamp();
 
-        long offset_seconds = static_cast<long>(original_utc_ts - local_as_utc_ts);
+        // 使用 int 来存储偏移量，足够且可移植
+        int offset_seconds = static_cast<int>(std::difftime(original_utc_ts, local_as_utc_ts));
 
         // 3. 将偏移量秒数格式化为 ±hh:mm
         char offset_buf[8];
-        long offset_hours = offset_seconds / 3600;
-        long offset_minutes = (std::abs(offset_seconds) % 3600) / 60;
-        std::snprintf(offset_buf, sizeof(offset_buf), "%+03ld:%02ld", offset_hours, offset_minutes);
+        int offset_hours = offset_seconds / 3600;
+        int offset_minutes = (std::abs(offset_seconds) % 3600) / 60;
+        // 使用 %d 和 %02d 来匹配 int 类型
+        std::snprintf(offset_buf, sizeof(offset_buf), "%+03d:%02d", offset_hours, offset_minutes);
 
         // 4. 组合成最终的ISO 8601字符串
         char buffer[128] = { 0 };
