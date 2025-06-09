@@ -79,7 +79,7 @@ private:
         return local_tm;
     }
 
-    std::tm to_tm_utc() const {
+    inline std::tm to_tm_utc() const {
         std::tm utc_tm{};
 #ifdef _WIN32
         gmtime_s(&utc_tm, &time_t_value_);
@@ -89,7 +89,9 @@ private:
         return utc_tm;
     }
 
+
 public:
+
     inline void SetDateTime(int year, int month, int day, int hour, int minute, int second) {
         std::tm t{};
         t.tm_year = year - 1900;

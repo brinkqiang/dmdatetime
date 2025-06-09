@@ -223,8 +223,6 @@ TEST_F(CDMDateTimeUsageTest, StaticUtilityMethods) {
     CDMDateTime minValue = CDMDateTime::MinValue();
     CDMDateTime maxValue = CDMDateTime::MaxValue();
 
-    fmt::print("{} size_t={}\n", minValue.ToString(), sizeof(time_t));
-    fmt::print("{} size_t={}\n", maxValue.ToString(), sizeof(time_t));
     EXPECT_TRUE(minValue < dt_ref);
     EXPECT_TRUE(maxValue > dt_ref);
     EXPECT_TRUE(minValue < maxValue);
@@ -403,18 +401,15 @@ TEST_F(CDMDateTimePracticalTest, Subtract) {
     EXPECT_EQ(1, endTime.Subtract(startTime).GetTotalHours());
 }
 
-TEST_F(CDMDateTimePracticalTest, 3000)
+TEST_F(CDMDateTimePracticalTest, years_3000)
 {
     CDMDateTime maxValue = CDMDateTime::MaxValue();
 
-    fmt::print("{}\n", maxValue.GetYear());
-
-    fmt::print("{}\n", maxValue.ToString());
+    ASSERT_TRUE(maxValue.ToString() == "3000-01-01 08:00:00");
 
     CDMDateTime xdata;
     xdata.SetDateTime(3000, 1, 1, 12, 0, 0);
-
-    fmt::print("{} {}\n", xdata.ToString(), xdata.GetYear());
+    ASSERT_TRUE(xdata.ToString() == "3000-01-01 12:00:00");
 
     int start_year = 2150;
     int end_year_search_limit = 3000;
@@ -440,4 +435,18 @@ TEST_F(CDMDateTimePracticalTest, 3000)
             fmt::print("{}\n", "Unknown exception caught during CDMDateTime construction or validation.");
         }
     }
+}
+
+
+TEST_F(CDMDateTimePracticalTest, NextMonthOn)
+{
+    CDMDateTime now = CDMDateTime::Now();
+
+    auto next = now.NextMonthOn(1, 8, 0, 0);
+
+    auto now_next = now.AddMonths(1);
+
+    now_next.SetDateTime(now_next.GetYear(), now_next.GetMonth(), 1, 8, 0, 0);
+
+    ASSERT_TRUE(next.ToString() == now_next.ToString());
 }
