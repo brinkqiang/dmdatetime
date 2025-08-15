@@ -1,5 +1,26 @@
 # dmdatetime - 一个现代C++的日期与时间处理库
 
+Copyright (c) 2013-2018 brinkqiang (brink.qiang@gmail.com)
+
+[![dmdatetime](https://img.shields.io/badge/brinkqiang-dmdatetime-blue.svg?style=flat-square)](https://github.com/brinkqiang/dmdatetime)
+[![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://github.com/brinkqiang/dmdatetime/blob/master/LICENSE)
+[![blog](https://img.shields.io/badge/Author-Blog-7AD6FD.svg)](https://brinkqiang.github.io/)
+[![Open Source Love](https://badges.frapsoft.com/os/v3/open-source.png)](https://github.com/brinkqiang)
+[![GitHub stars](https://img.shields.io/github/stars/brinkqiang/dmdatetime.svg?label=Stars)](https://github.com/brinkqiang/dmdatetime) 
+[![GitHub forks](https://img.shields.io/github/forks/brinkqiang/dmdatetime.svg?label=Fork)](https://github.com/brinkqiang/dmdatetime)
+
+## Build status
+| [Linux][lin-link] | [Mac][mac-link] | [Windows][win-link] |
+| :---------------: | :----------------: | :-----------------: |
+| ![lin-badge]      | ![mac-badge]       | ![win-badge]        |
+
+[lin-badge]: https://github.com/brinkqiang/dmdatetime/workflows/linux/badge.svg "linux build status"
+[lin-link]:  https://github.com/brinkqiang/dmdatetime/actions/workflows/linux.yml "linux build status"
+[mac-badge]: https://github.com/brinkqiang/dmdatetime/workflows/mac/badge.svg "mac build status"
+[mac-link]:  https://github.com/brinkqiang/dmdatetime/actions/workflows/mac.yml "mac build status"
+[win-badge]: https://github.com/brinkqiang/dmdatetime/workflows/win/badge.svg "win build status"
+[win-link]:  https://github.com/brinkqiang/dmdatetime/actions/workflows/win.yml "win build status"
+
 `dmdatetime` 是一个功能丰富的、仅含头文件的 C++ 库，旨在提供一个类似于 C\# `DateTime` 和 `TimeSpan` 的强大而直观的接口，用于处理日期和时间。它基于标准的 `<ctime>`，并封装了复杂的细节，从而简化了常见的日期时间计算、格式化和解析任务。
 
 ## 核心特性
